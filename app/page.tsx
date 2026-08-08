@@ -106,10 +106,21 @@ export default function HomePage() {
 
       <section className="final-cta">
         <div className="cta-inner">
-          <p className="eyebrow" data-reveal><span />Have a project?</p>
-          <h2 data-reveal>Got a project?<br /><em>Let&apos;s build it right.</em></h2>
-          <div className="cta-side" data-reveal><p>Tell us what the website needs to achieve. We&apos;ll help shape the right direction.</p><a href="/contact" className="button button-primary">Start a project <Arrow /></a></div>
-          <div className="cta-line" aria-hidden="true"><i /><i /><i /></div>
+          <div className="cta-copy">
+            <p className="cta-kicker" data-reveal><i aria-hidden="true" />Available for new projects</p>
+            <h2 data-reveal><span>Got a project?</span><span>Let&apos;s build it</span><span>right.</span></h2>
+            <p className="cta-body" data-reveal>Tell us what you need, what your business does and where you want to take it. We&apos;ll help shape the right website around it.</p>
+            <div className="cta-actions" data-reveal><a href="/contact" className="button button-primary">Start a project <Arrow /></a><a className="cta-email" href="mailto:hello@ahpixel.studio">hello@ahpixel.studio</a></div>
+          </div>
+          <div className="cta-workspace" data-reveal>
+            <div className="workspace-grid" aria-hidden="true" />
+            <div className="workspace-label"><span>Project / 01</span><span>Responsive website</span></div>
+            <div className="workspace-desktop"><Image src={heroProject.desktopImages[0]} alt="Vanta Barber Club responsive desktop website" width={1425} height={990} sizes="(max-width: 900px) 82vw, 44vw" /></div>
+            <div className="workspace-phone"><Image src={heroProject.mobileImages[0]} alt="Vanta Barber Club mobile website" width={206} height={446} sizes="(max-width: 900px) 24vw, 10vw" /></div>
+            <div className="workspace-meta"><strong>Vanta Barber Club</strong><span>Concept website · 2026</span></div>
+            <div className="workspace-coordinates">X 0768&nbsp;&nbsp; Y 0430</div>
+            <div className="workspace-pixels" aria-hidden="true"><i /><i /></div>
+          </div>
         </div>
       </section>
     </main>
