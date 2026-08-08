@@ -2,6 +2,7 @@
 
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { siteConfig } from "../data/site";
 
 const navigation = [
@@ -14,7 +15,7 @@ const navigation = [
 export function Logo() {
   return (
     <a href="/" className="logo" aria-label="AHPixel Studio home">
-      <span className="logo-mark" aria-hidden="true"><b>A</b><b>H</b><i /></span>
+      <Image className="logo-image" src="/ahpixel-logo.png" alt="" width={870} height={658} priority aria-hidden="true" />
       <span className="logo-name"><strong>AHPixel</strong><small>Studio</small></span>
     </a>
   );

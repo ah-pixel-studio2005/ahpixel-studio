@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { SiteShell } from "./components/SiteShell";
 import { siteConfig } from "./data/site";
 import "./globals.css";
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: "Modern, fast and responsive websites for businesses and professionals.",
     images: ["/og.png"],
   },
-  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+  icons: { icon: "/ahpixel-logo.png", shortcut: "/ahpixel-logo.png", apple: "/ahpixel-logo.png" },
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#07090D" };
