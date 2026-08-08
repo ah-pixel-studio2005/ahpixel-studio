@@ -1,4 +1,4 @@
-
+import Image from "next/image";
 import { Metadata } from "next";
 import { projects, serviceSummaries } from "./data/site";
 import { Arrow } from "./components/SiteShell";
@@ -12,39 +12,68 @@ export const metadata: Metadata = {
 };
 
 const process = [
-  ["01", "Discover", "We understand your business, goals, audience and website requirements."],
-  ["02", "Design", "We define structure, visual direction and user experience."],
-  ["03", "Build", "We turn the approved direction into a fast, responsive website."],
-  ["04", "Refine", "We test responsiveness, performance, interactions and details."],
-  ["05", "Launch", "The finished website is prepared and published."],
+  ["01", "Discover", "Understand the business, audience and goal."],
+  ["02", "Design", "Define structure, direction and user experience."],
+  ["03", "Build", "Turn the approved direction into a responsive website."],
+  ["04", "Refine", "Test the details, interactions and performance."],
+  ["05", "Launch", "Prepare the finished website to go live."],
 ];
+
+const values = ["Clear message", "Professional image", "Mobile experience", "Easier contact"];
+const studioPoints = [["01", "Clarity"], ["02", "Detail"], ["03", "Performance"]];
 
 export default function HomePage() {
   const featured = projects.filter(project => project.featured);
+  const heroProject = featured[0];
+
   return (
     <main>
       <section className="home-hero">
         <div className="hero-grid" aria-hidden="true" />
-        <div className="pixel-field" aria-hidden="true"><i /><i /><i /><i /><i /></div>
-        <p className="eyebrow" data-reveal><span />Web design · Development · Digital experiences</p>
-        <h1 data-reveal>We build webs<br />that mean <em>business.</em></h1>
-        <div className="home-hero-bottom">
-          <p data-reveal>AHPixel Studio designs and builds modern, fast and responsive websites for businesses that want a stronger digital presence.</p>
-          <div className="hero-actions" data-reveal><a href="/work" className="button button-primary">View our work <Arrow /></a><a href="/contact" className="button button-quiet">Start a project <Arrow /></a></div>
+        <div className="hero-shell">
+          <div className="hero-copy">
+            <div className="hero-label" data-reveal>
+              <span>Web design / Development</span>
+              <span>AHPixel Studio · Lima / Worldwide</span>
+            </div>
+            <h1 data-reveal>We build webs<br />that mean <em>business.</em></h1>
+            <p className="hero-description" data-reveal>Modern websites for businesses that want a sharper, more credible digital presence.</p>
+            <div className="hero-actions" data-reveal>
+              <a href="/work" className="button button-primary">View work <Arrow /></a>
+              <a href="/contact" className="button button-secondary">Start a project <Arrow /></a>
+            </div>
+          </div>
+          <a className="hero-work" href={`/work/${heroProject.slug}`} aria-label={`View ${heroProject.title} case study`} data-reveal>
+            <span className="hero-work-label">Selected work / 01</span>
+            <div className="hero-browser">
+              <div className="browser-bar"><i /><i /><i /><span>vanta / desktop</span></div>
+              <Image src={heroProject.desktopImages[0]} alt="Vanta Barber Club website displayed in a browser frame" width={1425} height={990} priority sizes="(max-width: 860px) 88vw, 48vw" />
+            </div>
+            <div className="hero-phone">
+              <Image src={heroProject.mobileImages[0]} alt="Vanta Barber Club mobile website" width={375} height={812} priority sizes="(max-width: 860px) 28vw, 11vw" />
+            </div>
+            <div className="hero-project-meta"><strong>VANTA</strong><span>Concept website · 2026</span></div>
+            <div className="hero-pixels" aria-hidden="true"><i /><i /><i /></div>
+          </a>
         </div>
-        <div className="hero-spec" aria-hidden="true"><span>AH / 001</span><span>DESIGN SYSTEM ONLINE</span><span>2026</span></div>
-        <a className="scroll-note" href="#selected-work">Scroll to explore <span>↓</span></a>
+        <div className="hero-footer"><span>Independent digital studio</span><span>Scroll to explore ↓</span></div>
       </section>
 
       <section className="work-section section-space" id="selected-work">
         <SectionHeader index="01" label="Selected work" />
-        <div className="section-title-row" data-reveal><h2>Work with<br /><em>its own identity.</em></h2><p>Every project gets a visual language shaped around the business—not around a reusable agency template.</p></div>
+        <div className="section-intro" data-reveal>
+          <h2>Work built around<br />the business.</h2>
+          <p>Every project receives its own visual language, structure and character.</p>
+        </div>
         {featured.map(project => <ProjectPreview project={project} key={project.slug} />)}
       </section>
 
       <section className="services-preview section-space light-section">
-        <SectionHeader index="02" label="What we build" dark />
-        <div className="section-title-row on-light" data-reveal><h2>Useful websites.<br /><em>Built properly.</em></h2><p>Focused digital experiences for businesses and professionals ready to look as credible online as they are in real life.</p></div>
+        <SectionHeader index="02" label="Services" dark />
+        <div className="compact-intro" data-reveal>
+          <h2>What we build.</h2>
+          <p>Focused websites designed around the goals of each business.</p>
+        </div>
         <div className="service-list">
           {serviceSummaries.map(service => <article key={service.number} data-reveal><span>{service.number}</span><h3>{service.title}</h3><p>{service.text}</p><a href="/services" aria-label={`Learn about ${service.title}`}><Arrow /></a></article>)}
         </div>
@@ -52,33 +81,37 @@ export default function HomePage() {
       </section>
 
       <section className="process-section section-space">
-        <SectionHeader index="03" label="Our process" />
-        <div className="section-title-row" data-reveal><h2>From idea<br /><em>to live website.</em></h2><p>A clear, collaborative path from first conversation to a finished website ready to do its job.</p></div>
+        <SectionHeader index="03" label="Process" />
+        <div className="compact-intro" data-reveal><h2>From idea to live.</h2><p>A clear path from first conversation to a website ready to work.</p></div>
         <div className="process-track">
-          {process.map(([number, title, text]) => <article key={number} data-reveal><span>{number}</span><i /><h3>{title}</h3><p>{text}</p></article>)}
+          {process.map(([number, title, text]) => <article key={number} data-reveal><span>{number}</span><i /><div><h3>{title}</h3><p>{text}</p></div></article>)}
         </div>
       </section>
 
       <section className="why-section light-section">
-        <div className="why-grid" aria-hidden="true" />
-        <p className="eyebrow dark" data-reveal><span />A website is part of the business</p>
-        <h2 data-reveal>Your website<br /><em>works before you do.</em></h2>
-        <div className="why-copy" data-reveal><p>For many customers, your website is their first interaction with your business. It should communicate trust, explain what you offer and make the next step obvious.</p><div className="why-points"><span>Clear message</span><span>Professional image</span><span>Mobile experience</span><span>Faster contact</span></div></div>
+        <div className="why-inner">
+          <div data-reveal><p className="eyebrow dark"><span />Business value</p><h2>Your website<br />works <em>before you do.</em></h2></div>
+          <div className="why-copy" data-reveal><p>For many customers, your website is their first interaction with your business. It should communicate trust, explain what you offer and make the next step obvious.</p><div className="why-points">{values.map((value, index) => <span key={value}><b>0{index + 1}</b>{value}</span>)}</div></div>
+        </div>
       </section>
 
       <section className="about-preview section-space">
         <SectionHeader index="04" label="The studio" />
-        <div className="about-statement"><h2 data-reveal>Small studio.<br /><em>Serious about details.</em></h2><div data-reveal><p>AHPixel Studio is an independent web design and development studio focused on modern digital experiences for businesses and professionals.</p><p>We combine thoughtful design, responsive development and attention to detail to build websites that look professional and feel effortless to use.</p><TextLink href="/about">About AHPixel</TextLink></div></div>
+        <div className="about-statement">
+          <h2 data-reveal>Small studio.<br /><em>Serious about details.</em></h2>
+          <div className="about-copy" data-reveal><p>AHPixel Studio is an independent web design and development studio focused on modern digital experiences for businesses and professionals.</p><p>Thoughtful design and precise frontend work come together to create websites that look credible and feel effortless to use.</p><TextLink href="/about">About AHPixel</TextLink></div>
+        </div>
+        <div className="studio-points">{studioPoints.map(([n, title]) => <div key={n}><span>{n}</span><strong>{title}</strong></div>)}</div>
       </section>
 
       <section className="final-cta">
-        <div className="cta-pixels" aria-hidden="true"><i /><i /><i /><i /></div>
-        <p className="eyebrow" data-reveal><span />Have a project in mind?</p>
-        <h2 data-reveal>Let&apos;s build<br /><em>something good.</em></h2>
-        <p data-reveal>Tell us what you&apos;re building and let&apos;s see how AHPixel can help.</p>
-        <div className="hero-actions" data-reveal><a href="/contact" className="button button-primary">Start a project <Arrow /></a><a href="/work" className="button button-quiet">View our work <Arrow /></a></div>
+        <div className="cta-inner">
+          <p className="eyebrow" data-reveal><span />Have a project?</p>
+          <h2 data-reveal>Got a project?<br /><em>Let&apos;s build it right.</em></h2>
+          <div className="cta-side" data-reveal><p>Tell us what the website needs to achieve. We&apos;ll help shape the right direction.</p><a href="/contact" className="button button-primary">Start a project <Arrow /></a></div>
+          <div className="cta-line" aria-hidden="true"><i /><i /><i /></div>
+        </div>
       </section>
     </main>
   );
 }
-
