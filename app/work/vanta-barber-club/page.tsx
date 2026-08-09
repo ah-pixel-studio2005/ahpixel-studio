@@ -3,6 +3,7 @@ import Image from "next/image";
 import { projects } from "../../data/site";
 import { Arrow } from "../../components/SiteShell";
 import { SectionHeader } from "../../components/ui";
+import { CaseStudyMotion } from "../../components/interactive/CaseStudyMotion";
 
 const project = projects.find(item => item.slug === "vanta-barber-club")!;
 
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 
 export default function VantaCaseStudy() {
   return <main className="case-study" style={{ "--case-accent": project.accent } as React.CSSProperties}>
+    <CaseStudyMotion />
     <section className="case-hero">
       <div className="case-no">Project / {project.number}</div>
       <p className="eyebrow" data-reveal><span />Concept project · {project.year}</p>
