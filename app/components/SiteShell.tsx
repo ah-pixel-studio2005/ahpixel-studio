@@ -30,12 +30,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     return () => document.body.classList.remove("menu-open");
   }, [menuOpen]);
 
-  useEffect(() => {
-    const nodes = document.querySelectorAll<HTMLElement>("[data-reveal]");
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add("is-visible")), { threshold: 0.1 });
-    nodes.forEach(node => observer.observe(node));
-    return () => observer.disconnect();
-  });
 
   return <>
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
