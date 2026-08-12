@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
   title: { default: "AHPixel Studio | Web Design & Development", template: "%s" },
   description: "AHPixel Studio designs and builds modern, fast and responsive websites for businesses and professionals.",
+  alternates: { canonical: "/", languages: { "en-US": "/", "es-PE": "/es" } },
   keywords: ["web design", "web development", "responsive websites", "business websites", "landing pages", "AHPixel Studio"],
   openGraph: {
     type: "website",

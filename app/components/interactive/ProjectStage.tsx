@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Arrow } from "../SiteShell";
 import { projects } from "../../data/site";
+import { TrackedLink } from "../TrackedLink";
 
 const sceneMeta = [
   { label: "Concept project", title: "Vanta Barber Club", note: "Web design / Frontend" },
@@ -26,7 +27,7 @@ export function ProjectStage() {
         <h2>{sceneMeta[scene].title}</h2>
         <small>{sceneMeta[scene].note}</small>
         <div className="project-stage-dots" aria-label="Project views">{sceneMeta.map((item, index) => <button type="button" className={index <= scene ? "active" : ""} aria-label={`Show ${item.title}`} aria-pressed={index === scene} onClick={() => setScene(index)} key={item.title}/>)}</div>
-        <div className="project-stage-links"><a href={`/work/${project.slug}`}>View case study <Arrow /></a><a href={project.liveUrl} target="_blank" rel="noreferrer">Live website <Arrow /></a></div>
+        <div className="project-stage-links"><TrackedLink eventName="case_study_clicked" eventDetail={{source:"home_stage"}} href={`/work/${project.slug}`}>View case study <Arrow /></TrackedLink><TrackedLink eventName="vanta_live_demo_clicked" eventDetail={{source:"home_stage"}} href={project.liveUrl} target="_blank" rel="noopener noreferrer">Live website <Arrow /></TrackedLink></div>
       </div>
       <div className="vanta-stage-canvas">
         <button type="button" className="project-stage-arrow previous" onClick={previousScene} disabled={scene === 0} aria-label="Previous project view"><span aria-hidden="true">‹</span></button>
@@ -40,7 +41,7 @@ export function ProjectStage() {
     <div className="project-mobile-scenes">
       <MobileScene number="01" label="Vanta Barber Club" image={project.desktopImages[0]} alt="Vanta desktop homepage" />
       <MobileScene number="02" label="Art direction" image={project.desktopImages[1]} alt="Vanta art direction" />
-      <div className="project-mobile-scene"><span>03 / Responsive experience</span><div className="mobile-vanta-pair"><Image src={project.mobileImages[0]} alt="Vanta mobile homepage" width={375} height={812}/><Image src={project.mobileImages[1]} alt="Vanta mobile detail" width={375} height={750}/></div><div className="mobile-stage-links"><a href={`/work/${project.slug}`}>View case study <Arrow/></a><a href={project.liveUrl} target="_blank" rel="noreferrer">Live website <Arrow/></a></div></div>
+        <div className="project-mobile-scene"><span>03 / Responsive experience</span><div className="mobile-vanta-pair"><Image src={project.mobileImages[0]} alt="Vanta mobile homepage" width={375} height={812}/><Image src={project.mobileImages[1]} alt="Vanta mobile detail" width={375} height={750}/></div><div className="mobile-stage-links"><TrackedLink eventName="case_study_clicked" eventDetail={{source:"home_mobile_stage"}} href={`/work/${project.slug}`}>View case study <Arrow/></TrackedLink><TrackedLink eventName="vanta_live_demo_clicked" eventDetail={{source:"home_mobile_stage"}} href={project.liveUrl} target="_blank" rel="noopener noreferrer">Live website <Arrow/></TrackedLink></div></div>
     </div>
   </section>;
 }

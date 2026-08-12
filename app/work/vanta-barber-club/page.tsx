@@ -4,6 +4,7 @@ import { projects } from "../../data/site";
 import { Arrow } from "../../components/SiteShell";
 import { SectionHeader } from "../../components/ui";
 import { CaseStudyMotion } from "../../components/interactive/CaseStudyMotion";
+import { TrackedLink } from "../../components/TrackedLink";
 
 const project = projects.find(item => item.slug === "vanta-barber-club")!;
 
@@ -26,7 +27,7 @@ export default function VantaCaseStudy() {
       <p className="eyebrow" data-reveal><span />Concept project · {project.year}</p>
       <h1 data-reveal>Vanta<br /><em>Barber Club</em></h1>
       <p className="case-lead" data-reveal>A premium barbershop website concept built around bold editorial typography, cinematic imagery and a frictionless mobile experience.</p>
-      <div className="case-actions" data-reveal><a className="button button-primary" href={project.liveUrl} target="_blank" rel="noreferrer">View live website <Arrow /></a><a className="button button-quiet" href="/work">Back to work <Arrow /></a></div>
+      <div className="case-actions" data-reveal><TrackedLink eventName="vanta_live_demo_clicked" eventDetail={{source:"case_study_top"}} className="button button-primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">View live website <Arrow /></TrackedLink><a className="button button-quiet" href="/work">Back to work <Arrow /></a></div>
     </section>
 
     <section className="case-meta light-section">
@@ -66,7 +67,7 @@ export default function VantaCaseStudy() {
       <h2 data-reveal>A complete digital identity.<br /><em>Built from one clear idea.</em></h2>
       <p data-reveal>The finished concept feels premium, coherent and purposeful from first impression to booking form—while remaining performant and responsive.</p>
       <div className="concept-disclaimer" data-reveal><span>Important note</span><p>VANTA Barber Club is a fictional concept project created by AHPixel Studio for portfolio and design demonstration purposes. It is not presented as a paying client.</p></div>
-      <a className="button button-dark" href={project.liveUrl} target="_blank" rel="noreferrer">View live website <Arrow /></a>
+      <TrackedLink eventName="vanta_live_demo_clicked" eventDetail={{source:"case_study_bottom"}} className="button button-dark" href={project.liveUrl} target="_blank" rel="noopener noreferrer">View live website <Arrow /></TrackedLink>
     </section>
   </main>;
 }
