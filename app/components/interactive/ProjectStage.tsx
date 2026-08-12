@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Arrow } from "../SiteShell";
 import { projects } from "../../data/site";
 
@@ -12,44 +12,28 @@ const sceneMeta = [
 ];
 
 export function ProjectStage() {
-  const root = useRef<HTMLElement>(null);
   const [scene, setScene] = useState(0);
   const project = projects[0];
 
-  useEffect(() => {
-    const node = root.current;
-    if (!node) return;
-    let frame = 0;
-    const update = () => {
-      const rect = node.getBoundingClientRect();
-      const available = Math.max(1, rect.height - innerHeight);
-      const progress = Math.max(0, Math.min(1, -rect.top / available));
-      node.style.setProperty("--project-progress", progress.toFixed(3));
-      const next = progress < .34 ? 0 : progress < .7 ? 1 : 2;
-      setScene(current => current === next ? current : next);
-      frame = 0;
-    };
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
-    update();
-    addEventListener("scroll", onScroll, { passive: true });
-    addEventListener("resize", onScroll);
-    return () => { removeEventListener("scroll", onScroll); removeEventListener("resize", onScroll); if (frame) cancelAnimationFrame(frame); };
-  }, []);
+  const previousScene = () => setScene(current => Math.max(0, current - 1));
+  const nextScene = () => setScene(current => Math.min(sceneMeta.length - 1, current + 1));
 
-  return <section ref={root} id="work" className={`project-scroll-stage scene-${scene + 1}`} data-home-section="02" data-nav="work">
+  return <section id="work" className={`project-scroll-stage scene-${scene + 1}`} data-home-section="02" data-nav="work">
     <div className="project-sticky">
       <div className="project-stage-meta" aria-live="polite">
         <span className="project-stage-count">0{scene + 1} / 03</span>
         <p>{sceneMeta[scene].label}</p>
         <h2>{sceneMeta[scene].title}</h2>
         <small>{sceneMeta[scene].note}</small>
-        <div className="project-stage-dots" aria-hidden="true">{sceneMeta.map((_, index) => <i className={index <= scene ? "active" : ""} key={index}/>)}</div>
+        <div className="project-stage-dots" aria-label="Project views">{sceneMeta.map((item, index) => <button type="button" className={index <= scene ? "active" : ""} aria-label={`Show ${item.title}`} aria-pressed={index === scene} onClick={() => setScene(index)} key={item.title}/>)}</div>
         <div className="project-stage-links"><a href={`/work/${project.slug}`}>View case study <Arrow /></a><a href={project.liveUrl} target="_blank" rel="noreferrer">Live website <Arrow /></a></div>
       </div>
       <div className="vanta-stage-canvas">
+        <button type="button" className="project-stage-arrow previous" onClick={previousScene} disabled={scene === 0} aria-label="Previous project view"><span aria-hidden="true">‹</span></button>
         <div className="vanta-scene vanta-scene-one"><div className="stage-browser-shell"><div className="browser-bar"><i/><i/><i/><span>VANTA / HOME</span></div><Image src={project.desktopImages[0]} alt="Vanta Barber Club homepage" width={1425} height={990} sizes="(max-width: 768px) 92vw, 62vw" /></div></div>
         <div className="vanta-scene vanta-scene-two"><div className="stage-browser-shell alternate"><div className="browser-bar"><i/><i/><i/><span>VANTA / ART DIRECTION</span></div><Image src={project.desktopImages[1]} alt="Vanta Barber Club art direction and process" width={1425} height={786} sizes="(max-width: 768px) 92vw, 58vw" /></div></div>
         <div className="vanta-scene vanta-scene-three"><div className="stage-mobile-pair"><div><Image src={project.mobileImages[0]} alt="Vanta mobile homepage" width={375} height={812} sizes="(max-width: 768px) 44vw, 16vw" /></div><div><Image src={project.mobileImages[1]} alt="Vanta responsive detail" width={375} height={750} sizes="(max-width: 768px) 44vw, 16vw" /></div></div></div>
+        <button type="button" className="project-stage-arrow next" onClick={nextScene} disabled={scene === sceneMeta.length - 1} aria-label="Next project view"><span aria-hidden="true">›</span></button>
         <span className="stage-coordinate">Project 01 / X 0768 / Y 0430</span>
       </div>
     </div>
