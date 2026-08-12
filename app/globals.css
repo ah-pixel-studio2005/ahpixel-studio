@@ -61,6 +61,14 @@
 .mobile-language-switcher{display:none}
 @media(max-width:1100px){.site-header{gap:20px}.desktop-nav{gap:28px}.header-cta{width:165px}}
 @media(max-width:860px){.site-header{grid-template-columns:1fr auto;gap:0}.language-switcher{display:none}.mobile-language-switcher{display:flex;margin:24px 0}.inquiry-success{min-height:420px;padding:34px 24px}.inquiry-success-actions{width:100%;flex-direction:column}.inquiry-success-actions .button{width:100%}}
+
+/* Footer sizing: keep the editorial signature visible without creating a second screen. */
+.footer{position:relative;z-index:90;padding-top:54px;padding-bottom:22px}
+.footer-grid{gap:clamp(50px,7vw,110px);padding-bottom:42px}
+.footer-word{font-size:clamp(96px,12.5vw,190px);line-height:.72;margin:32px 0 0;white-space:nowrap}
+.footer-bottom{padding-top:18px}
+@media(max-width:860px){.footer{padding-top:48px}.footer-grid{gap:38px;padding-bottom:36px}.footer-word{font-size:clamp(68px,21vw,150px);margin-top:28px}.footer-bottom{padding-top:16px}}
+@media(max-width:520px){.footer-word{font-size:20vw;letter-spacing:-.065em}.footer-bottom{margin-top:4px}}
 @media(prefers-reduced-motion:reduce){.interactive-hero-stage,.interactive-browser,.interactive-phone,.interactive-pixels i,.service-switch-pixel{animation:none!important}.interactive-hero-stage{transform:none!important}.vanta-scene,.build-visual *,.case-study.motion-enabled .case-image-wide,.case-study.motion-enabled .desktop-frame,.case-study.motion-enabled .phone-pair{transition:none!important}.case-study.motion-enabled .case-image-wide,.case-study.motion-enabled .desktop-frame,.case-study.motion-enabled .phone-pair{clip-path:none!important;opacity:1!important;transform:none!important}.section-progress{display:none}}
 .scene-3 .vanta-scene-two{opacity:.08}.scene-3 .vanta-scene-three{z-index:2}.scene-3 .stage-mobile-pair>div{height:84%}.scene-3 .stage-mobile-pair>div:nth-child(2){height:76%}
 
