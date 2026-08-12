@@ -40,5 +40,6 @@ yarn-error.log*
 /work/
 
 /qa/
+/qa-screenshots/
 dev.log
 dev-error.log
