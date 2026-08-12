@@ -1,19 +1,24 @@
 "use client";
 
-import { PointerEvent, useRef, useState } from "react";
+import { PointerEvent, useEffect, useRef, useState } from "react";
 
 const details:Record<string,string[]>={Clarity:["Information hierarchy","Obvious next step"],Typography:["Type scale","Hierarchy / rhythm"],Responsive:["375 → 1920","Adaptive layout"],Motion:["Purposeful feedback","Reduced-motion ready"],Performance:["Fast by default","Lean execution"],Structure:["Clear content paths","Reusable systems"],Detail:["Spacing / states","Consistent finish"],Accessibility:["Keyboard first","Readable contrast"]};
 const words=Object.keys(details);
 
 export function StudioPlayground(){
   const field=useRef<HTMLDivElement>(null);
+  const frame=useRef<number | null>(null);
   const [active,setActive]=useState("Typography");
+  useEffect(()=>()=>{if(frame.current)cancelAnimationFrame(frame.current)},[]);
   const move=(event:PointerEvent<HTMLDivElement>)=>{
     if(!field.current||matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches)return;
     const r=field.current.getBoundingClientRect();
     const x=(event.clientX-r.left)/r.width-.5,y=(event.clientY-r.top)/r.height-.5;
-    field.current.style.setProperty("--point-move-x",`${x*12}px`);
-    field.current.style.setProperty("--point-move-y",`${y*12}px`);
+    if(frame.current)cancelAnimationFrame(frame.current);
+    frame.current=requestAnimationFrame(()=>{
+      field.current?.style.setProperty("--point-move-x",`${x*12}px`);
+      field.current?.style.setProperty("--point-move-y",`${y*12}px`);
+    });
   };
   return <section id="studio" className="studio-playground" data-home-section="05" data-nav="studio">
     <div className="playground-heading"><span>05 / Studio field</span><h2>Small studio.<br/>Obsessed with<br/><em>the details.</em></h2><a href="/about">Inside the studio ↗</a></div>

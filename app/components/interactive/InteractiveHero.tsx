@@ -53,7 +53,7 @@ export function InteractiveHero() {
           <div className="browser-bar"><i/><i/><i/><span>VANTA / DESKTOP</span></div>
           <Image src={project.desktopImages[0]} alt="Vanta Barber Club desktop website" width={1425} height={990} priority sizes="(max-width: 768px) 90vw, 48vw" />
         </div>
-        <div className="interactive-phone"><Image src={project.mobileImages[0]} alt="Vanta Barber Club mobile website" width={375} height={812} priority sizes="(max-width: 768px) 28vw, 11vw" /></div>
+        <div className="interactive-phone"><Image src={project.mobileImages[0]} alt="Vanta Barber Club mobile website" width={375} height={812} sizes="(max-width: 768px) 28vw, 11vw" /></div>
         <div className="interactive-pixels" aria-hidden="true"><i/><i/><i/><i/></div>
         <div className="interactive-stage-footer"><strong>VANTA</strong><span>Concept website · 2026</span></div>
       </a>
