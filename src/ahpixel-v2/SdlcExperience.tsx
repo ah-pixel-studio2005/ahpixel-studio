@@ -288,7 +288,7 @@ export default function SdlcExperience() {
               end: mobile ? "+=1200" : "+=1550",
               pin: ".entry-stage",
               scrub: mobile ? 0.7 : 1,
-              anticipatePin: 1,
+              anticipatePin: 0,
             },
           })
           .to(".entry-intro", { opacity: 1, duration: 0.45 }, 0)
@@ -349,7 +349,7 @@ export default function SdlcExperience() {
             end: mobile ? "+=3700" : "+=4800",
             pin: ".vanta-stage",
             scrub: mobile ? 0.65 : 0.9,
-            anticipatePin: 1,
+            anticipatePin: 0,
             onRefresh: (self) => {
               vantaScrollBoundsRef.current = { start: self.start, end: self.end };
             },
@@ -447,7 +447,7 @@ export default function SdlcExperience() {
             end: mobile ? "+=6600" : "+=8200",
             pin: ".build-stage",
             scrub: mobile ? 0.65 : 0.85,
-            anticipatePin: 1,
+            anticipatePin: 0,
             onUpdate: ({ progress }) => {
               const systemProgress = Math.min(1, Math.max(0, (progress - 0.065) / 0.935));
               buildCanvasRef.current?.setProgress(systemProgress);

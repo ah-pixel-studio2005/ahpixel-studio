@@ -2913,9 +2913,19 @@ a {
 .studio-footer > p { max-width: 390px; margin: 0; }
 .studio-footer > span { grid-column: 1 / -1; padding-top: 32px; border-top: 1px solid var(--line); }
 
-.fixed-whatsapp { position: fixed; z-index: 1100; right: 34px; bottom: 28px; display: flex; align-items: center; gap: 11px; min-height: 56px; padding: 0 19px; border: 1px solid rgba(73,226,112,.5); background: rgba(3,13,9,.9); color: #79ef97; box-shadow: 0 12px 42px rgba(0,0,0,.36); backdrop-filter: blur(14px); font-size: 11px; font-weight: 800; letter-spacing: .14em; transition: transform .22s ease, background-color .22s ease, color .22s ease; }
-.fixed-whatsapp svg { width: 21px; height: 21px; fill: currentColor; }
-.fixed-whatsapp:hover { background: #63e883; color: #031008; transform: translateY(-4px); }
+.fixed-whatsapp { position: fixed; z-index: 1100; right: 24px; bottom: 24px; display: grid; place-items: center; width: 56px; height: 56px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: #25d366; color: #fff; box-shadow: 0 10px 32px rgba(0,0,0,.34), 0 0 0 1px rgba(37,211,102,.12); transition: transform .22s ease, background-color .22s ease, box-shadow .22s ease; isolation: isolate; }
+.fixed-whatsapp::before { content: ""; position: absolute; z-index: -1; inset: -1px; border: 1px solid rgba(37,211,102,.62); border-radius: inherit; animation: whatsapp-pulse 2.6s ease-out infinite; pointer-events: none; }
+.fixed-whatsapp svg { width: 29px; height: 29px; fill: currentColor; }
+.fixed-whatsapp:hover { background: #20bd5a; transform: translateY(-3px) scale(1.04); box-shadow: 0 14px 38px rgba(0,0,0,.4), 0 0 0 5px rgba(37,211,102,.1); }
+@keyframes whatsapp-pulse {
+  0%, 48% { opacity: 0; transform: scale(1); }
+  58% { opacity: .58; }
+  82%, 100% { opacity: 0; transform: scale(1.34); }
+}
+
+.entry-stage,
+.vanta-stage,
+.build-stage { overflow-anchor: none; }
 
 @media (max-width: 980px) {
   .contact-heading { grid-template-columns: 1fr; gap: 28px; }
@@ -2944,7 +2954,10 @@ a {
   .channel-icon { width: 19px; height: 19px; }
   .studio-footer { grid-template-columns: 1fr; padding: 46px 18px 28px; }
   .studio-footer > span { grid-column: 1; margin-top: 12px; }
-  .fixed-whatsapp { right: 14px; bottom: 14px; min-height: 48px; padding: 0 14px; }
-  .fixed-whatsapp span { display: none; }
-  .fixed-whatsapp svg { width: 23px; height: 23px; }
+  .fixed-whatsapp { right: 16px; bottom: 16px; width: 52px; height: 52px; }
+  .fixed-whatsapp svg { width: 27px; height: 27px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fixed-whatsapp::before { animation: none; }
 }
