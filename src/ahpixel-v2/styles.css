@@ -3425,3 +3425,72 @@ a {
 @media (max-width: 380px) {
   .menu-toggle { width: 48px; height: 48px; }
 }
+
+.form-status.is-sent { color: #63e993; }
+.form-status.is-error { color: #ff8d8d; }
+.form-submit button:disabled { cursor: wait; opacity: .68; transform: none; }
+.project-form .form-honey { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Mobile type system: readable editorial hierarchy without desktop-sized overflow. */
+@media (max-width: 760px) {
+  .experience { font-size: 16px; }
+
+  .topbar-nav a { font-size: clamp(13px, 3.7vw, 15px); }
+  .language-switch { font-size: 11px; }
+  .language-switch button { font-size: 11px; font-weight: 750; }
+
+  .entry-title {
+    font-size: clamp(40px, 12vw, 52px);
+    line-height: .9;
+    text-wrap: balance;
+  }
+  .entry-intro > p,
+  .vanta-eyebrow,
+  .vanta-state-copy span,
+  .vanta-bridge > p { font-size: clamp(9px, 2.55vw, 11px); line-height: 1.45; }
+  .entry-intro-bottom > p,
+  .vanta-state-copy p,
+  .evidence-heading > span,
+  .build-copy p,
+  .website-type-copy > p,
+  .types-intro-note { font-size: clamp(14px, 3.85vw, 16px); line-height: 1.6; }
+  .entry-meta,
+  .meta-left,
+  .meta-right,
+  .walk-size,
+  .walk-live,
+  .type-product-meta { font-size: clamp(8px, 2.25vw, 10px); line-height: 1.45; }
+  .entry-pills span,
+  .build-copy-chips span,
+  .vanta-marker b { font-size: clamp(8px, 2.2vw, 10px); }
+  .walkthrough-project-switcher button { font-size: clamp(10px, 2.8vw, 12px); }
+  .walk-open-link { font-size: 10px; }
+
+  .evidence-metrics span,
+  .evidence-questions > span { font-size: 10px; }
+  .evidence-metrics strong { font-size: clamp(19px, 5.2vw, 23px); }
+  .evidence-metrics p,
+  .evidence-questions p { font-size: clamp(12px, 3.35vw, 14px); line-height: 1.55; }
+  .evidence-questions b { font-size: 9px; }
+
+  .types-selector button strong { font-size: clamp(13px, 3.7vw, 16px); }
+  .types-live-summary > strong { font-size: clamp(21px, 5.8vw, 25px); }
+  .types-live-summary > p { font-size: 14px; line-height: 1.55; }
+  .website-type-copy > strong { font-size: clamp(21px, 5.8vw, 25px); line-height: 1.25; }
+
+  .contact-heading > span { font-size: clamp(15px, 4vw, 17px); line-height: 1.65; }
+  .location-panel > p { font-size: 15px; }
+  .location-panel > a { font-size: 11px; }
+  .contact-channels small { font-size: 11px; }
+  .contact-channels strong { font-size: clamp(15px, 4vw, 17px); }
+  .project-form label > span { font-size: 11px; line-height: 1.4; }
+  .project-form input,
+  .project-form textarea,
+  .service-picker-trigger { font-size: 16px; }
+  .service-picker-options button { font-size: 15px; }
+  .form-submit p { font-size: 14px; line-height: 1.6; }
+  .form-submit button { font-size: 12px; }
+  .studio-footer > p,
+  .studio-footer > span,
+  .studio-footer > div span { font-size: 11px; line-height: 1.65; }
+}

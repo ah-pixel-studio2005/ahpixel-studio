@@ -36,9 +36,11 @@ const copy = {
     services: ["Landing page", "Web empresarial", "Web profesional", "Rediseño web", "Aún no estoy seguro"],
     message: "¿Qué debe lograr la web?",
     messagePlaceholder: "Cuéntanos sobre tu negocio, objetivo y situación actual.",
-    privacy: "Al enviar, se abrirá un correo nuevo con la información lista. No guardamos tus datos en esta web.",
-    submit: "PREPARAR CONSULTA",
-    prepared: "Consulta preparada. Se abrió una nueva pestaña para enviarla por correo.",
+    privacy: "Enviaremos la consulta directamente a AHPixel Studio. No guardamos tus datos en esta web.",
+    submit: "ENVIAR CONSULTA",
+    sending: "ENVIANDO…",
+    sent: "Consulta enviada correctamente. Te responderemos lo antes posible.",
+    error: "No pudimos enviar la consulta. Inténtalo nuevamente o escríbenos por WhatsApp.",
     fixed: "ESCRÍBENOS",
     footer: "Diseño y desarrollo web con dirección, carácter y propósito.",
     worldwide: "LIMA, PERÚ · TRABAJAMOS A NIVEL INTERNACIONAL",
@@ -67,9 +69,11 @@ const copy = {
     services: ["Landing page", "Business website", "Professional website", "Website redesign", "I am not sure yet"],
     message: "What should the website achieve?",
     messagePlaceholder: "Tell us about your business, goal and current situation.",
-    privacy: "Submitting opens a new email with the information ready. We do not store your data on this website.",
-    submit: "PREPARE INQUIRY",
-    prepared: "Inquiry prepared. A new tab was opened so you can send it by email.",
+    privacy: "We will send your inquiry directly to AHPixel Studio. We do not store your data on this website.",
+    submit: "SEND INQUIRY",
+    sending: "SENDING…",
+    sent: "Your inquiry was sent successfully. We will reply as soon as possible.",
+    error: "We could not send your inquiry. Please try again or contact us through WhatsApp.",
     fixed: "MESSAGE US",
     footer: "Web design and development with direction, character and purpose.",
     worldwide: "LIMA, PERU · AVAILABLE WORLDWIDE",
@@ -95,7 +99,7 @@ function ChannelIcon({ type }: { type: "email" | "whatsapp" | "instagram" | "git
 export default function StudioContact({ language }: { language: Language }) {
   const t = copy[language];
   const formRef = useRef<HTMLFormElement>(null);
-  const [prepared, setPrepared] = useState(false);
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [completedFields, setCompletedFields] = useState(0);
   const [service, setService] = useState("");
   const [serviceOpen, setServiceOpen] = useState(false);
@@ -104,9 +108,10 @@ export default function StudioContact({ language }: { language: Language }) {
     : "Hello AHPixel Studio, I would like to ask about a website project.";
   const whatsappUrl = `https://wa.me/${PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
 
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     if (!data.get("service")) {
       setServiceOpen(true);
       return;
@@ -114,30 +119,27 @@ export default function StudioContact({ language }: { language: Language }) {
     const subject = language === "es"
       ? `Consulta web — ${data.get("company") || data.get("name")}`
       : `Website inquiry — ${data.get("company") || data.get("name")}`;
-    const body = language === "es"
-      ? [
-          `Nombre: ${data.get("name")}`,
-          `Empresa / marca: ${data.get("company") || "—"}`,
-          `Correo: ${data.get("email")}`,
-          `Teléfono / WhatsApp: ${data.get("phone") || "—"}`,
-          `Tipo de web: ${data.get("service")}`,
-          "",
-          "Objetivo del proyecto:",
-          String(data.get("message")),
-        ].join("\n")
-      : [
-          `Name: ${data.get("name")}`,
-          `Company / brand: ${data.get("company") || "—"}`,
-          `Email: ${data.get("email")}`,
-          `Phone / WhatsApp: ${data.get("phone") || "—"}`,
-          `Website type: ${data.get("service")}`,
-          "",
-          "Project goal:",
-          String(data.get("message")),
-        ].join("\n");
+    data.append("_subject", subject);
+    data.append("_template", "table");
+    data.append("_captcha", "false");
+    data.append("_url", window.location.href);
 
-    setPrepared(true);
-    window.open(gmailComposeUrl(subject, body), "_blank", "noopener,noreferrer");
+    setSubmitState("sending");
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: data,
+      });
+      const result = await response.json();
+      if (!response.ok || result.success === false) throw new Error(`Form submission failed: ${response.status}`);
+      setSubmitState("sent");
+      form.reset();
+      setService("");
+      setCompletedFields(0);
+    } catch {
+      setSubmitState("error");
+    }
   };
 
   const updateProgress = (event: FormEvent<HTMLFormElement>) => {
@@ -190,6 +192,7 @@ export default function StudioContact({ language }: { language: Language }) {
           </aside>
 
           <form ref={formRef} className="project-form" onSubmit={submit} onInput={updateProgress} onChange={updateProgress}>
+            <input className="form-honey" type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden="true" />
             <div className="form-topline"><span>{t.form}</span><b>{String(completedFields).padStart(2, "0")} / 06</b></div>
             <div className="field-row">
               <label><span>{t.name} *</span><input name="name" autoComplete="name" required /></label>
@@ -212,8 +215,10 @@ export default function StudioContact({ language }: { language: Language }) {
             </label>
             <label><span>{t.message} *</span><textarea name="message" rows={5} placeholder={t.messagePlaceholder} required /></label>
             <div className="form-submit">
-              <p aria-live="polite">{prepared ? t.prepared : t.privacy}</p>
-              <button type="submit">{t.submit} <Arrow /></button>
+              <p className={`form-status is-${submitState}`} aria-live="polite">
+                {submitState === "sent" ? t.sent : submitState === "error" ? t.error : t.privacy}
+              </p>
+              <button type="submit" disabled={submitState === "sending"}>{submitState === "sending" ? t.sending : t.submit} <Arrow /></button>
             </div>
           </form>
         </div>
