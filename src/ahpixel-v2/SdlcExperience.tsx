@@ -192,6 +192,8 @@ type ProjectKey = keyof typeof portfolioProjects;
 
 export default function SdlcExperience() {
   const [language, setLanguage] = useState<"en" | "es">("es");
+  const languageRef = useRef(language);
+  languageRef.current = language;
   const [selectedProject, setSelectedProject] = useState<ProjectKey>("vanta");
   const [menuOpen, setMenuOpen] = useState(false);
   const currentProject = portfolioProjects[selectedProject];
@@ -249,6 +251,10 @@ export default function SdlcExperience() {
 
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({
+      autoRefreshEvents: "visibilitychange,DOMContentLoaded",
+      ignoreMobileResize: true,
+    });
 
     const context = gsap.context(() => {
       const root = rootRef.current;
@@ -257,7 +263,7 @@ export default function SdlcExperience() {
       const globalProgress = ScrollTrigger.create({
         start: 0,
         end: "max",
-        invalidateOnRefresh: true,
+        invalidateOnRefresh: false,
         onUpdate: ({ progress }) => {
           if (progressRef.current) {
             progressRef.current.textContent = `${Math.round(progress * 100)
@@ -289,6 +295,7 @@ export default function SdlcExperience() {
               pin: ".entry-stage",
               scrub: mobile ? 0.7 : 1,
               anticipatePin: 0,
+              refreshPriority: 30,
             },
           })
           .to(".entry-intro", { opacity: 1, duration: 0.45 }, 0)
@@ -313,8 +320,8 @@ export default function SdlcExperience() {
             { xPercent: 110, duration: 0.9, ease: "none" },
             0.72,
           )
-          .to(".entry-project-meta", { opacity: 1, y: 0, duration: 0.4 }, 0.92)
-          .to(".entry-vanta", { scale: mobile ? 0.95 : 0.92, yPercent: mobile ? 3 : 1, duration: 0.52 }, 1.18)
+          .to(".entry-vanta", { scale: mobile ? 0.95 : 0.9, yPercent: mobile ? -1 : -7, duration: 0.46 }, 0.94)
+          .to(".entry-project-meta", { opacity: 1, y: 0, duration: 0.36 }, 1.2)
           .to(".entry-vanta, .entry-project-meta", { opacity: 0, duration: 0.22 }, 1.58);
       };
 
@@ -350,6 +357,7 @@ export default function SdlcExperience() {
             pin: ".vanta-stage",
             scrub: mobile ? 0.65 : 0.9,
             anticipatePin: 0,
+            refreshPriority: 20,
             onRefresh: (self) => {
               vantaScrollBoundsRef.current = { start: self.start, end: self.end };
             },
@@ -364,33 +372,25 @@ export default function SdlcExperience() {
         }
 
         const switchCopy = (from: number, to: number, time: number) => {
-          tl.to(`.vanta-state-copy-${from}`, { opacity: 0, y: -24, duration: 0.35 }, time)
-            .to(`.vanta-state-copy-${to}`, { opacity: 1, y: 0, duration: 0.5 }, time + 0.18)
+          tl.to(`.vanta-state-copy-${from}`, { opacity: 0, y: mobile ? -10 : -24, duration: mobile ? 0.18 : 0.35 }, time)
+            .to(`.vanta-state-copy-${to}`, { opacity: 1, y: 0, duration: mobile ? 0.28 : 0.5 }, mobile ? time : time + 0.18)
             .to(`.vanta-marker-${from}`, { opacity: 0.22, scaleX: 0.35, duration: 0.35 }, time)
             .to(`.vanta-marker-${to}`, { opacity: 1, scaleX: 1, duration: 0.5 }, time + 0.12);
         };
 
         switchCopy(0, 1, 1.2);
-        tl.to(".walk-desktop", { xPercent: mobile ? -16 : -18, yPercent: -2, scale: mobile ? 0.8 : 0.72, rotationY: mobile ? 0 : 5, duration: 1.1 }, 1.05)
+        tl.to(".walk-desktop", { xPercent: mobile ? 0 : -18, yPercent: -2, scale: mobile ? 0.8 : 0.72, rotationY: mobile ? 0 : 5, duration: 1.1 }, 1.05)
           .to(".walk-phone", { opacity: 1, xPercent: mobile ? 0 : 1, yPercent: mobile ? 13 : 6, scale: mobile ? .98 : .78, rotationY: 0, rotationZ: 0, duration: 1 }, 1.12)
           .to(".walk-grid-line-a", { scaleX: 1, duration: 0.8 }, 1.25);
 
         switchCopy(1, 2, 2.55);
-        tl.to(".walk-desktop", { opacity: mobile ? 0.13 : 0.2, xPercent: mobile ? -48 : -28, yPercent: -4, scale: mobile ? 0.7 : 0.62, rotationY: mobile ? 0 : 8, duration: 0.9 }, 2.48)
-          .to(".walk-phone", { xPercent: mobile ? -42 : -52, yPercent: 1, scale: mobile ? 1.08 : 1.02, rotationY: mobile ? 0 : -4, duration: 0.95 }, 2.48)
+        tl.to(".walk-desktop", { opacity: mobile ? 0.2 : 0.2, xPercent: mobile ? 0 : -28, yPercent: -4, scale: mobile ? 0.76 : 0.62, rotationY: mobile ? 0 : 8, duration: 0.9 }, 2.48)
+          .to(".walk-phone", { xPercent: mobile ? 0 : -52, yPercent: 1, scale: mobile ? 1.04 : 1.02, rotationY: mobile ? 0 : -4, duration: 0.95 }, 2.48)
           .to(".mobile-screen-0", { opacity: 0, duration: 0.35 }, 2.56)
           .fromTo(".mobile-screen-1", { opacity: 0, clipPath: "inset(0 0 100% 0)", scale: 1.05 }, { opacity: 1, clipPath: "inset(0 0 0% 0)", scale: 1, duration: 0.55 }, 2.62);
 
-        if (mobile) {
-          tl.to(".vanta-eyebrow, .vanta-state-copy-wrap > h2", {
-            opacity: 0,
-            y: -22,
-            duration: 0.45,
-          }, 2.4);
-        }
-
         switchCopy(2, 3, 3.85);
-        tl.to(".walk-desktop", { opacity: 1, xPercent: mobile ? -10 : -8, yPercent: 1, scale: mobile ? 1 : 0.78, rotationY: mobile ? 0 : -3, duration: 1 }, 3.75)
+        tl.to(".walk-desktop", { opacity: 1, xPercent: mobile ? 0 : -8, yPercent: 1, scale: mobile ? 0.96 : 0.78, rotationY: mobile ? 0 : -3, duration: 1 }, 3.75)
           .to(".desktop-screen-0", { opacity: 0, duration: 0.4 }, 3.75)
           .fromTo(".desktop-screen-1", { opacity: 0, clipPath: "inset(0 0 100% 0)", scale: 1.04 }, { opacity: 1, clipPath: "inset(0 0 0% 0)", scale: 1, duration: 0.62 }, 3.84)
           .to(".walk-phone", { xPercent: mobile ? 0 : 4, yPercent: mobile ? 18 : 8, scale: mobile ? 0.9 : 0.72, rotationY: mobile ? 0 : 4, duration: 0.9 }, 3.75)
@@ -398,7 +398,7 @@ export default function SdlcExperience() {
           .fromTo(".mobile-screen-2", { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.55 }, 3.88);
 
         switchCopy(3, 4, 5.2);
-        tl.to(".walk-desktop", { xPercent: mobile ? -10 : -11, yPercent: -1, scale: mobile ? .96 : .75, rotationY: mobile ? 0 : 3, duration: .9 }, 5.05)
+        tl.to(".walk-desktop", { xPercent: mobile ? 0 : -11, yPercent: -1, scale: mobile ? .94 : .75, rotationY: mobile ? 0 : 3, duration: .9 }, 5.05)
           .to(".walk-phone", { xPercent: mobile ? 1 : 7, yPercent: mobile ? 15 : 8, scale: mobile ? .86 : .68, rotationY: mobile ? 0 : -4, duration: .9 }, 5.05)
           .to(".desktop-screen-1", { opacity: 0, duration: 0.4 }, 5.1)
           .fromTo(".desktop-screen-2", { opacity: 0, clipPath: "inset(0 50% 0 50%)", scale: 1.08 }, { opacity: 1, clipPath: "inset(0 0% 0 0%)", scale: 1, duration: 0.62 }, 5.16)
@@ -406,23 +406,24 @@ export default function SdlcExperience() {
           .fromTo(".mobile-screen-3", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.52 }, 5.22)
           .to(".gallery-shard", { opacity: 1, scale: 1, rotation: 0, stagger: 0.09, duration: 0.68 }, 5.22);
 
+        const bridgeStart = 6.6;
         tl.to(".walk-desktop, .walk-phone, .gallery-shard", {
           opacity: 0,
           scale: 0.78,
           clipPath: "inset(48% 0% 48% 0%)",
-          stagger: 0.05,
-          duration: 1.15,
-        }, 6.6)
-          .to(".vanta-state-copy-4, .vanta-state-nav, .walk-micro", { opacity: 0, duration: 0.5 }, 6.65)
-          .to(".bridge-line", { scaleX: 1, stagger: 0.1, duration: 0.75 }, 6.85)
-          .to(".vanta-bridge", { opacity: 1, duration: 0.6 }, 7.05)
-          .fromTo(".bridge-word", { yPercent: 105 }, { yPercent: 0, stagger: 0.08, duration: 0.75 }, 7.1)
-          .to(".bridge-word-old", { opacity: 0, yPercent: -42, duration: 0.38 }, 7.92)
-          .fromTo(".bridge-word-new", { yPercent: 105, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7 }, 8.48)
-          .to(".bridge-word-new", { opacity: 0, yPercent: -24, duration: 0.38 }, 9.18)
-          .to(".bridge-seed", { scale: 1.08, duration: 0.6, ease: "power1.inOut" }, 9.35)
-          .to(".bridge-seed", { scale: mobile ? 3.2 : 4.2, opacity: 0, duration: 0.82, ease: "power2.in" }, 10.55)
-          .to(".vanta-bridge > p", { opacity: 0, duration: 0.4 }, 10.72);
+          stagger: 0.04,
+          duration: mobile ? 0.5 : 1.15,
+        }, bridgeStart)
+          .to(".vanta-state-copy-4, .vanta-state-nav, .walk-micro", { opacity: 0, duration: mobile ? 0.24 : 0.5 }, bridgeStart + 0.05)
+          .to(".bridge-line", { scaleX: 1, stagger: 0.08, duration: mobile ? 0.34 : 0.75 }, bridgeStart + 0.2)
+          .to(".vanta-bridge", { opacity: 1, duration: mobile ? 0.3 : 0.6 }, bridgeStart + 0.32)
+          .fromTo(".bridge-word", { yPercent: 105 }, { yPercent: 0, stagger: 0.06, duration: mobile ? 0.4 : 0.75 }, bridgeStart + 0.38)
+          .to(".bridge-word-old", { opacity: 0, yPercent: -42, duration: 0.28 }, bridgeStart + (mobile ? 0.92 : 1.32))
+          .fromTo(".bridge-word-new", { yPercent: 105, opacity: 0 }, { yPercent: 0, opacity: 1, duration: mobile ? 0.38 : 0.7 }, bridgeStart + (mobile ? 1.12 : 1.88))
+          .to(".bridge-word-new", { opacity: 0, yPercent: -24, duration: 0.28 }, bridgeStart + (mobile ? 1.58 : 2.58))
+          .to(".bridge-seed", { scale: 1.08, duration: mobile ? 0.3 : 0.6, ease: "power1.inOut" }, bridgeStart + (mobile ? 1.68 : 2.75))
+          .to(".bridge-seed", { scale: mobile ? 3.2 : 4.2, opacity: 0, duration: mobile ? 0.48 : 0.82, ease: "power2.in" }, bridgeStart + (mobile ? 2.05 : 3.95))
+          .to(".vanta-bridge > p", { opacity: 0, duration: 0.3 }, bridgeStart + (mobile ? 2.2 : 4.12));
 
         return tl;
       };
@@ -448,6 +449,7 @@ export default function SdlcExperience() {
             pin: ".build-stage",
             scrub: mobile ? 0.65 : 0.85,
             anticipatePin: 0,
+            refreshPriority: 10,
             onUpdate: ({ progress }) => {
               const systemProgress = Math.min(1, Math.max(0, (progress - 0.065) / 0.935));
               buildCanvasRef.current?.setProgress(systemProgress);
@@ -455,10 +457,10 @@ export default function SdlcExperience() {
               const activeIndex = Math.min(10, Math.round(activeFloat));
               const step = systemProgress < 0.012 ? 0 : Math.min(11, activeIndex + 1);
               if (buildStepRef.current) {
-                buildStepRef.current.textContent = `${String(step).padStart(2, "0")} / 11 · ${language === "es" ? "DESPLAZA" : "SCROLL"}`;
+                buildStepRef.current.textContent = `${String(step).padStart(2, "0")} / 11 · ${languageRef.current === "es" ? "DESPLAZA" : "SCROLL"}`;
               }
               if (buildBeatRef.current) {
-                const beats = language === "es" ? buildBeatsEs : buildBeats;
+                const beats = languageRef.current === "es" ? buildBeatsEs : buildBeats;
                 buildBeatRef.current.textContent = beats[activeIndex];
               }
               root.querySelectorAll<HTMLElement>(".build-copy").forEach((element, index) => {
@@ -504,8 +506,6 @@ export default function SdlcExperience() {
         });
       });
 
-      const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 80);
-
       gsap.from(".evidence-heading > *", {
         scrollTrigger: { trigger: ".studio-evidence", start: "top 78%", once: true },
         y: 28,
@@ -531,15 +531,36 @@ export default function SdlcExperience() {
         ease: "power2.out",
       });
 
+      // Build every pin spacer before the visitor can start scrolling. A delayed
+      // refresh while a pinned scene is active makes the browser compensate its
+      // scroll position and produces the visible up/down jump.
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+
+      let viewportWidth = window.innerWidth;
+      let resizeTimer = 0;
+      const refreshForRealWidthChange = () => {
+        const nextWidth = window.innerWidth;
+        if (Math.abs(nextWidth - viewportWidth) < 2) return;
+        viewportWidth = nextWidth;
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          ScrollTrigger.sort();
+          ScrollTrigger.refresh();
+        }, 220);
+      };
+      window.addEventListener("resize", refreshForRealWidthChange, { passive: true });
+
       return () => {
-        window.clearTimeout(refreshTimer);
+        window.removeEventListener("resize", refreshForRealWidthChange);
+        window.clearTimeout(resizeTimer);
         globalProgress.kill();
         media.revert();
       };
     }, rootRef);
 
     return () => context.revert();
-  }, [language]);
+  }, []);
 
   const jumpToVantaState = (index: number) => {
     const trigger = ScrollTrigger.getById("vanta-walk");
@@ -585,7 +606,7 @@ export default function SdlcExperience() {
             <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => setLanguage("en")} aria-pressed={language === "en"}><span className="language-long">ENGLISH</span><span className="language-short">EN</span></button>
           </div>
           <a className="topbar-link" href="#contact">{language === "es" ? "INICIAR PROYECTO" : "START A PROJECT"} ↗</a>
-          <button className="menu-toggle" type="button" aria-controls="primary-navigation" aria-expanded={menuOpen} aria-label={language === "es" ? "Abrir o cerrar navegación" : "Open or close navigation"} onClick={() => setMenuOpen((open) => !open)}><i /><i /></button>
+          <button className="menu-toggle" type="button" aria-controls="primary-navigation" aria-expanded={menuOpen} aria-label={language === "es" ? "Abrir o cerrar navegación" : "Open or close navigation"} onClick={() => setMenuOpen((open) => !open)}><i /><i /><i /></button>
         </div>
       </header>
 
@@ -605,7 +626,7 @@ export default function SdlcExperience() {
           <div className="entry-intro">
             <p><i /> {language === "es" ? "ESTRATEGIA · DISEÑO · DESARROLLO" : "STRATEGY · DESIGN · DEVELOPMENT"}</p>
             <h1 id="entry-title" className="entry-title">
-              {language === "es" ? <>WEBS CREADAS PARA<br />MOVER <em>NEGOCIOS.</em></> : <>WEBSITES BUILT TO<br />MOVE <em>BUSINESS.</em></>}
+              {language === "es" ? <>WEBS QUE<br /><em>MUEVEN NEGOCIOS.</em></> : <>WEBSITES THAT<br /><em>MOVE BUSINESS.</em></>}
             </h1>
             <div className="entry-intro-bottom">
               <p>{language === "es" ? "Convertimos una idea de negocio en una experiencia digital clara, distintiva y lista para producir resultados." : "We turn a business idea into a clear, distinctive digital experience built to produce results."}</p>
@@ -749,7 +770,7 @@ export default function SdlcExperience() {
               <span className="bridge-word bridge-word-old">{language === "es" ? "SOLO UNA PÁGINA." : "JUST A PAGE."}</span>
               <span className="bridge-word bridge-word-new">{language === "es" ? <>ES LA PRIMERA<br />CONVERSACIÓN.</> : <>IT IS THE FIRST<br />CONVERSATION.</>}</span>
             </div>
-            <span className="bridge-seed">AHP</span>
+            <span className="bridge-seed" data-label={language === "es" ? "ESTRATEGIA · DISEÑO · CÓDIGO" : "STRATEGY · DESIGN · CODE"}>AHP</span>
           </div>
         </div>
       </section>

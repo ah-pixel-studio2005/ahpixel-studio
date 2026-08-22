@@ -15,7 +15,7 @@ const websiteTypes = [
       goal: "Lead generation", structure: "One focused page", action: "Contact / convert",
     },
     es: {
-      title: "PÁGINA DE CAPTACIÓN", statement: "UNA OFERTA. UN CAMINO. UNA ACCIÓN CLARA.",
+      title: "LANDING PAGE", statement: "UNA OFERTA. UN CAMINO. UNA ACCIÓN CLARA.",
       intro: "Una página enfocada y de alto impacto, diseñada alrededor de una campaña, servicio o lanzamiento. Cada sección conduce al visitante hacia una conversión definida.",
       ideal: "Campañas, lanzamientos, servicios específicos y marcas personales.",
       includes: ["Estrategia y estructura", "Dirección visual personalizada", "Desarrollo adaptable", "Flujo de contacto o conversión"],
@@ -159,7 +159,7 @@ export default function WebsiteTypes({ language }: { language: Language }) {
           {language === "es" ? <>¿QUÉ DEBERÍA<br /><em>LOGRAR</em> TU WEB?</> : <>WHAT SHOULD<br />YOUR WEBSITE <em>DO?</em></>}
         </h2>
         <p>{language === "es" ? "Cuéntanos qué necesita comunicar, mejorar o conseguir el negocio. Definiremos la estructura correcta antes de diseñar la superficie." : "Tell us what the business needs to communicate, improve or achieve. We will define the right structure before designing the surface."}</p>
-        <a href={`mailto:ahpixel.studio@gmail.com?subject=${encodeURIComponent(language === "es" ? "Nuevo proyecto web" : "New website project")}`}>{language === "es" ? "INICIAR UN PROYECTO" : "START A PROJECT"} <span>↗</span></a>
+        <a href="#contact">{language === "es" ? "INICIAR UN PROYECTO" : "START A PROJECT"} <span>↓</span></a>
         <div className="outro-scope">
           <span>{language === "es" ? "ALCANCE" : "SCOPE"} / 2026</span>
           <p>{language === "es" ? "Enfocados en webs promocionales, empresariales y profesionales de alta calidad. El comercio electrónico llegará después." : "Focused on high-quality marketing, business and professional websites. E-commerce comes later."}</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 type Language = "en" | "es";
 
@@ -8,6 +8,9 @@ const EMAIL = "ahpixel.studio@gmail.com";
 const PHONE = "51997150226";
 const INSTAGRAM = "https://instagram.com/ahpixel.studio";
 const GITHUB = "https://github.com/ah-pixel-studio2005";
+
+const gmailComposeUrl = (subject = "", body = "") =>
+  `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
 const copy = {
   es: {
@@ -30,12 +33,12 @@ const copy = {
     phone: "Teléfono / WhatsApp",
     service: "Tipo de web",
     select: "Selecciona una opción",
-    services: ["Página de captación", "Web empresarial", "Web profesional", "Rediseño web", "Aún no estoy seguro"],
+    services: ["Landing page", "Web empresarial", "Web profesional", "Rediseño web", "Aún no estoy seguro"],
     message: "¿Qué debe lograr la web?",
     messagePlaceholder: "Cuéntanos sobre tu negocio, objetivo y situación actual.",
-    privacy: "Al enviar, se abrirá tu aplicación de correo con la información lista. No guardamos tus datos en esta web.",
+    privacy: "Al enviar, se abrirá un correo nuevo con la información lista. No guardamos tus datos en esta web.",
     submit: "PREPARAR CONSULTA",
-    prepared: "Consulta preparada. Si tu correo no se abrió, escríbenos directamente o continúa por WhatsApp.",
+    prepared: "Consulta preparada. Se abrió una nueva pestaña para enviarla por correo.",
     fixed: "ESCRÍBENOS",
     footer: "Diseño y desarrollo web con dirección, carácter y propósito.",
     worldwide: "LIMA, PERÚ · TRABAJAMOS A NIVEL INTERNACIONAL",
@@ -64,9 +67,9 @@ const copy = {
     services: ["Landing page", "Business website", "Professional website", "Website redesign", "I am not sure yet"],
     message: "What should the website achieve?",
     messagePlaceholder: "Tell us about your business, goal and current situation.",
-    privacy: "Submitting opens your email application with the information ready. We do not store your data on this website.",
+    privacy: "Submitting opens a new email with the information ready. We do not store your data on this website.",
     submit: "PREPARE INQUIRY",
-    prepared: "Inquiry prepared. If your email did not open, email us directly or continue on WhatsApp.",
+    prepared: "Inquiry prepared. A new tab was opened so you can send it by email.",
     fixed: "MESSAGE US",
     footer: "Web design and development with direction, character and purpose.",
     worldwide: "LIMA, PERU · AVAILABLE WORLDWIDE",
@@ -91,8 +94,11 @@ function ChannelIcon({ type }: { type: "email" | "whatsapp" | "instagram" | "git
 
 export default function StudioContact({ language }: { language: Language }) {
   const t = copy[language];
+  const formRef = useRef<HTMLFormElement>(null);
   const [prepared, setPrepared] = useState(false);
   const [completedFields, setCompletedFields] = useState(0);
+  const [service, setService] = useState("");
+  const [serviceOpen, setServiceOpen] = useState(false);
   const whatsappMessage = language === "es"
     ? "Hola AHPixel Studio, me gustaría consultar sobre una página web."
     : "Hello AHPixel Studio, I would like to ask about a website project.";
@@ -101,6 +107,10 @@ export default function StudioContact({ language }: { language: Language }) {
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    if (!data.get("service")) {
+      setServiceOpen(true);
+      return;
+    }
     const subject = language === "es"
       ? `Consulta web — ${data.get("company") || data.get("name")}`
       : `Website inquiry — ${data.get("company") || data.get("name")}`;
@@ -127,7 +137,7 @@ export default function StudioContact({ language }: { language: Language }) {
         ].join("\n");
 
     setPrepared(true);
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailComposeUrl(subject, body), "_blank", "noopener,noreferrer");
   };
 
   const updateProgress = (event: FormEvent<HTMLFormElement>) => {
@@ -136,6 +146,16 @@ export default function StudioContact({ language }: { language: Language }) {
         control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement,
     );
     setCompletedFields(controls.filter((control) => control.value.trim() !== "" && control.checkValidity()).length);
+  };
+
+  const chooseService = (value: string) => {
+    setService(value);
+    setServiceOpen(false);
+    requestAnimationFrame(() => {
+      if (formRef.current) {
+        updateProgress({ currentTarget: formRef.current } as FormEvent<HTMLFormElement>);
+      }
+    });
   };
 
   return (
@@ -162,14 +182,14 @@ export default function StudioContact({ language }: { language: Language }) {
 
             <div className="contact-channels">
               <span>{t.channels}</span>
-              <a href={`mailto:${EMAIL}`}><ChannelIcon type="email" /><small>{t.email}</small><strong>{EMAIL}</strong><Arrow /></a>
+              <a href={gmailComposeUrl(language === "es" ? "Consulta para AHPixel Studio" : "Inquiry for AHPixel Studio")} target="_blank" rel="noopener noreferrer"><ChannelIcon type="email" /><small>{t.email}</small><strong>{EMAIL}</strong><Arrow /></a>
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><ChannelIcon type="whatsapp" /><small>{t.whatsapp}</small><strong>+51 997 150 226</strong><Arrow /></a>
               <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer"><ChannelIcon type="instagram" /><small>{t.instagram}</small><strong>@ahpixel.studio</strong><Arrow /></a>
               <a href={GITHUB} target="_blank" rel="noopener noreferrer"><ChannelIcon type="github" /><small>{t.github}</small><strong>ah-pixel-studio2005</strong><Arrow /></a>
             </div>
           </aside>
 
-          <form className="project-form" onSubmit={submit} onInput={updateProgress} onChange={updateProgress}>
+          <form ref={formRef} className="project-form" onSubmit={submit} onInput={updateProgress} onChange={updateProgress}>
             <div className="form-topline"><span>{t.form}</span><b>{String(completedFields).padStart(2, "0")} / 06</b></div>
             <div className="field-row">
               <label><span>{t.name} *</span><input name="name" autoComplete="name" required /></label>
@@ -179,7 +199,17 @@ export default function StudioContact({ language }: { language: Language }) {
               <label><span>{t.contactEmail} *</span><input name="email" type="email" inputMode="email" autoComplete="email" required /></label>
               <label><span>{t.phone}</span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" /></label>
             </div>
-            <label><span>{t.service} *</span><select name="service" defaultValue="" required><option value="" disabled>{t.select}</option>{t.services.map((service) => <option key={service}>{service}</option>)}</select></label>
+            <label className="service-field"><span>{t.service} *</span>
+              <select className="service-native" name="service" value={service} onChange={(event) => chooseService(event.target.value)} aria-hidden="true" tabIndex={-1}>
+                <option value="">{t.select}</option>{t.services.map((option) => <option key={option}>{option}</option>)}
+              </select>
+              <button className={`service-picker-trigger${serviceOpen ? " is-open" : ""}`} type="button" aria-haspopup="listbox" aria-expanded={serviceOpen} onClick={() => setServiceOpen((open) => !open)}>
+                <span>{service || t.select}</span><b aria-hidden="true">⌄</b>
+              </button>
+              <div className={`service-picker-options${serviceOpen ? " is-open" : ""}`} role="listbox" aria-label={t.service}>
+                {t.services.map((option, index) => <button key={option} type="button" role="option" aria-selected={service === option} onClick={() => chooseService(option)}><b>{String(index + 1).padStart(2, "0")}</b><span>{option}</span></button>)}
+              </div>
+            </label>
             <label><span>{t.message} *</span><textarea name="message" rows={5} placeholder={t.messagePlaceholder} required /></label>
             <div className="form-submit">
               <p aria-live="polite">{prepared ? t.prepared : t.privacy}</p>
