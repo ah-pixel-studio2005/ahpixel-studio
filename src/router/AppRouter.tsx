@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import "../ahpixel-v2/styles.css";
-import SdlcExperience from "../ahpixel-v2/SdlcExperience";
+import "../ahpixel-commercial/commercial.css";
+import CommercialHome from "../ahpixel-commercial/CommercialHome";
 
 const VantaRoute = lazy(() => import("../demos/vanta/VantaRoute"));
 const LumenRoute = lazy(() => import("../demos/lumen/LumenRoute"));
@@ -22,7 +22,7 @@ export function AppRouter() {
     ? <VantaRoute path={path} />
     : path.startsWith("/demos/lumen")
       ? <LumenRoute path={path} />
-      : <SdlcExperience />;
+      : <CommercialHome />;
 
   return (
     <Suspense fallback={<div className="route-loader" role="status"><i /><span>AHPixel Studio</span><small>Cargando experiencia</small></div>}>
