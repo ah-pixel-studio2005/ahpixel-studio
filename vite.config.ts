@@ -19,8 +19,6 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes("node_modules")) return "vendor";
           if (id.includes("/src/ahpixel-v2/")) return "ahpixel-v2";
-          if (id.includes("/src/demos/vanta/")) return "demo-vanta";
-          if (id.includes("/src/demos/lumen/")) return "demo-lumen";
           if (id.includes("/src/ahpixel/")) return "ahpixel";
         },
       },

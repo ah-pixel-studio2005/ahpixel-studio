@@ -8,6 +8,7 @@ const EMAIL = "ahpixel.studio@gmail.com";
 const PHONE = "51997150226";
 const INSTAGRAM = "https://instagram.com/ahpixel.studio";
 const GITHUB = "https://github.com/ah-pixel-studio2005";
+const TIKTOK = "https://www.tiktok.com/@ahpixel.studio";
 
 const gmailComposeUrl = (subject = "", body = "") =>
   `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -102,7 +103,6 @@ export default function StudioContact({ language }: { language: Language }) {
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [completedFields, setCompletedFields] = useState(0);
   const [service, setService] = useState("");
-  const [serviceOpen, setServiceOpen] = useState(false);
   const whatsappMessage = language === "es"
     ? "Hola AHPixel Studio, me gustaría consultar sobre una página web."
     : "Hello AHPixel Studio, I would like to ask about a website project.";
@@ -112,10 +112,6 @@ export default function StudioContact({ language }: { language: Language }) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    if (!data.get("service")) {
-      setServiceOpen(true);
-      return;
-    }
     const subject = language === "es"
       ? `Consulta web — ${data.get("company") || data.get("name")}`
       : `Website inquiry — ${data.get("company") || data.get("name")}`;
@@ -150,16 +146,6 @@ export default function StudioContact({ language }: { language: Language }) {
     setCompletedFields(controls.filter((control) => control.value.trim() !== "" && control.checkValidity()).length);
   };
 
-  const chooseService = (value: string) => {
-    setService(value);
-    setServiceOpen(false);
-    requestAnimationFrame(() => {
-      if (formRef.current) {
-        updateProgress({ currentTarget: formRef.current } as FormEvent<HTMLFormElement>);
-      }
-    });
-  };
-
   return (
     <>
       <section className="studio-contact technical-grid" id="contact" aria-labelledby="contact-title" data-word={language === "es" ? "CONTACTO" : "CONTACT"}>
@@ -176,8 +162,9 @@ export default function StudioContact({ language }: { language: Language }) {
               <strong>{t.locationValue}</strong>
               <p>{t.locationNote}</p>
               <div className="location-map" aria-hidden="true">
-                <i className="map-orbit map-orbit-a" /><i className="map-orbit map-orbit-b" />
-                <b>AHP</b><small>LIMA / PE</small>
+                <i className="map-road road-a" /><i className="map-road road-b" /><i className="map-road road-c" />
+                <span className="map-coordinates">12.0464° S · 77.0428° W</span>
+                <b><i />LIMA</b><small>MIRAFLORES · PE</small>
               </div>
               <a href="https://www.google.com/maps/search/?api=1&query=Lima%2C%20Peru" target="_blank" rel="noopener noreferrer">{t.maps} <Arrow /></a>
             </article>
@@ -203,15 +190,12 @@ export default function StudioContact({ language }: { language: Language }) {
               <label><span>{t.phone}</span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" /></label>
             </div>
             <label className="service-field"><span>{t.service} *</span>
-              <select className="service-native" name="service" value={service} onChange={(event) => chooseService(event.target.value)} aria-hidden="true" tabIndex={-1}>
-                <option value="">{t.select}</option>{t.services.map((option) => <option key={option}>{option}</option>)}
-              </select>
-              <button className={`service-picker-trigger${serviceOpen ? " is-open" : ""}`} type="button" aria-haspopup="listbox" aria-expanded={serviceOpen} onClick={() => setServiceOpen((open) => !open)}>
-                <span>{service || t.select}</span><b aria-hidden="true">⌄</b>
-              </button>
-              <div className={`service-picker-options${serviceOpen ? " is-open" : ""}`} role="listbox" aria-label={t.service}>
-                {t.services.map((option, index) => <button key={option} type="button" role="option" aria-selected={service === option} onClick={() => chooseService(option)}><b>{String(index + 1).padStart(2, "0")}</b><span>{option}</span></button>)}
-              </div>
+              <span className="service-select-shell">
+                <select className="service-native" name="service" value={service} onChange={(event) => setService(event.target.value)} required aria-label={t.service}>
+                  <option value="" disabled>{t.select}</option>{t.services.map((option) => <option key={option} value={option}>{option}</option>)}
+                </select>
+                <i aria-hidden="true" />
+              </span>
             </label>
             <label><span>{t.message} *</span><textarea name="message" rows={5} placeholder={t.messagePlaceholder} required /></label>
             <div className="form-submit">
@@ -227,7 +211,7 @@ export default function StudioContact({ language }: { language: Language }) {
       <footer className="studio-footer">
         <div><strong>AHPixel</strong><span>STUDIO / 2026</span></div>
         <p>{t.footer}</p>
-        <p>{t.worldwide}</p>
+        <div className="footer-presence"><p>{t.worldwide}</p><nav aria-label={language === "es" ? "Redes sociales" : "Social media"}><a href={INSTAGRAM} target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href={TIKTOK} target="_blank" rel="noopener noreferrer">TikTok ↗</a><a href={GITHUB} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`mailto:${EMAIL}`}>Email ↗</a></nav></div>
         <span>{t.rights}</span>
       </footer>
 
