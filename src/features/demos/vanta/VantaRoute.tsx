@@ -1,4 +1,4 @@
-import { ShadowSurface } from "../../shared/ShadowSurface";
+import { ShadowSurface } from "@/components/shared/ShadowSurface";
 import VantaApp from "./VantaApp";
 import css from "./styles.css?inline";
 

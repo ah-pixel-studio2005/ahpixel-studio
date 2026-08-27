@@ -101,7 +101,6 @@ export default function StudioContact({ language }: { language: Language }) {
   const t = copy[language];
   const formRef = useRef<HTMLFormElement>(null);
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [completedFields, setCompletedFields] = useState(0);
   const [service, setService] = useState("");
   const whatsappMessage = language === "es"
     ? "Hola AHPixel Studio, me gustaría consultar sobre una página web."
@@ -132,18 +131,9 @@ export default function StudioContact({ language }: { language: Language }) {
       setSubmitState("sent");
       form.reset();
       setService("");
-      setCompletedFields(0);
     } catch {
       setSubmitState("error");
     }
-  };
-
-  const updateProgress = (event: FormEvent<HTMLFormElement>) => {
-    const controls = Array.from(event.currentTarget.elements).filter(
-      (control): control is HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement =>
-        control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement,
-    );
-    setCompletedFields(controls.filter((control) => control.value.trim() !== "" && control.checkValidity()).length);
   };
 
   return (
@@ -178,9 +168,9 @@ export default function StudioContact({ language }: { language: Language }) {
             </div>
           </aside>
 
-          <form ref={formRef} className="project-form" onSubmit={submit} onInput={updateProgress} onChange={updateProgress}>
+          <form ref={formRef} className="project-form" onSubmit={submit}>
             <input className="form-honey" type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-            <div className="form-topline"><span>{t.form}</span><b>{String(completedFields).padStart(2, "0")} / 06</b></div>
+            <div className="form-topline"><span>{t.form}</span></div>
             <div className="field-row">
               <label><span>{t.name} *</span><input name="name" autoComplete="name" required /></label>
               <label><span>{t.company}</span><input name="company" autoComplete="organization" /></label>

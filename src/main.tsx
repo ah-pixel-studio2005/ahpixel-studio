@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { AppRouter } from "./router/AppRouter";
+import { AppRouter } from "@/app/AppRouter";
 
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 

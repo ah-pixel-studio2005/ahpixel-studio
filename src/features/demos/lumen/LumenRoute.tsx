@@ -1,4 +1,4 @@
-import { ShadowSurface } from "../../shared/ShadowSurface";
+import { ShadowSurface } from "@/components/shared/ShadowSurface";
 import LumenApp from "./LumenApp";
 import css from "./styles.css?inline";
 

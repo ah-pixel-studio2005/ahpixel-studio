@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import "../ahpixel-commercial/commercial.css";
-import CommercialHome from "../ahpixel-commercial/CommercialHome";
-import VantaRoute from "../demos/vanta/VantaRoute";
-import LumenRoute from "../demos/lumen/LumenRoute";
+import "@/features/studio/styles/studio.css";
+import StudioSite from "@/features/studio/pages/StudioSite";
+import VantaRoute from "@/features/demos/vanta/VantaRoute";
+import LumenRoute from "@/features/demos/lumen/LumenRoute";
 
 function currentPath() {
   return window.location.pathname.replace(/\/+$/, "") || "/";
@@ -21,7 +21,7 @@ export function AppRouter() {
     ? <VantaRoute path={path} />
     : path.startsWith("/demos/lumen")
       ? <LumenRoute path={path} />
-      : <CommercialHome />;
+      : <StudioSite path={path} />;
 
   return content;
 }

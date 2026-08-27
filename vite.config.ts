@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "next/image": fileURLToPath(new URL("./src/shared/NextImage.tsx", import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "next/image": fileURLToPath(new URL("./src/components/shared/NextImage.tsx", import.meta.url)),
     },
   },
   build: {
@@ -18,8 +19,8 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) return "vendor";
-          if (id.includes("/src/ahpixel-v2/")) return "ahpixel-v2";
-          if (id.includes("/src/ahpixel/")) return "ahpixel";
+          if (id.includes("/src/features/demos/")) return "demos";
+          if (id.includes("/src/features/studio/")) return "studio";
         },
       },
     },

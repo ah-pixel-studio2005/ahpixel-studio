@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import StudioContact from "./StudioContact";
-import BuildSystemCanvas, { type BuildSystemCanvasHandle } from "./BuildSystemCanvas";
+import StudioContact from "@/features/studio/components/contact/StudioContact";
+import BuildSystemCanvas, { type BuildSystemCanvasHandle } from "@/features/studio/components/canvas/BuildSystemCanvas";
 
 type Language = "es" | "en";
 type Theme = "light" | "dark";
 
 const content = {
   es: {
-    nav: ["Servicios", "Proyectos", "Soluciones", "Nosotros"], quote: "Cotizar proyecto", eyebrow: "DISEÑO + DESARROLLO WEB · LIMA / GLOBAL",
+    nav: ["Servicios", "Proyectos", "Soluciones", "Proceso", "Nosotros", "Contacto"], quote: "Cotizar proyecto", eyebrow: "DISEÑO + DESARROLLO WEB · LIMA / GLOBAL",
     heroA: "Sitios web que convierten", heroEm: "claridad", heroB: "en crecimiento.",
     lead: "Diseñamos y desarrollamos experiencias digitales para empresas que necesitan comunicar mejor, generar confianza y convertir visitas en oportunidades reales.",
     primary: "Cotizar proyecto", secondary: "Ver proyectos", visual: "Proyectos reales · diseño adaptable",
@@ -37,7 +37,7 @@ const content = {
     finalEyebrow: "TU PRÓXIMO SITIO PUEDE EMPEZAR AQUÍ", finalTitle: "Cuéntanos qué necesita tu negocio.", finalLead: "Te ayudamos a elegir una solución clara, viable y diseñada para crecer contigo.", finalButton: "Cotizar mi proyecto",
   },
   en: {
-    nav: ["Services", "Projects", "Solutions", "About"], quote: "Request a quote", eyebrow: "WEB DESIGN + DEVELOPMENT · LIMA / GLOBAL",
+    nav: ["Services", "Projects", "Solutions", "Process", "About", "Contact"], quote: "Request a quote", eyebrow: "WEB DESIGN + DEVELOPMENT · LIMA / GLOBAL",
     heroA: "Websites that turn", heroEm: "clarity", heroB: "into growth.", lead: "We design and build digital experiences for companies that need to communicate better, build trust and turn visits into real opportunities.", primary: "Request a quote", secondary: "View projects", visual: "Real projects · responsive design",
     trust: ["Custom design", "Responsive", "High performance", "Technical SEO", "Scalable development", "Support"],
     servicesEyebrow: "CORE SERVICES", servicesTitle: "The right web solution, without unnecessary complexity.", servicesLead: "We understand the goal first. Then we design the system best suited to achieve it.",
@@ -59,48 +59,98 @@ const content = {
 
 const serviceImages = ["/solutions/landing-page.jpg", "/solutions/business-website.jpg", "/solutions/professional-website.jpg", "/solutions/website-redesign.jpg"];
 
-export default function CommercialHome() {
-  const [language, setLanguage] = useState<Language>("es");
-  const [theme, setTheme] = useState<Theme>("light");
+const pagePaths = ["/services", "/projects", "/solutions", "/process", "/about", "/contact"];
+
+export default function StudioSite({ path = "/" }: { path?: string }) {
+  const [language, setLanguageState] = useState<Language>(() => (window.localStorage.getItem("ahpixel-language") as Language | null) || "es");
+  const [theme, setTheme] = useState<Theme>(() => (window.localStorage.getItem("ahpixel-theme") as Theme | null) || "light");
   const [menuOpen, setMenuOpen] = useState(false);
   const [headerHidden, setHeaderHidden] = useState(false);
   const t = content[language];
+  const currentPage = pagePaths.includes(path) ? path : "/";
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("ahpixel-theme") as Theme | null;
-    if (saved) setTheme(saved);
+    window.scrollTo({ top: 0, behavior: "auto" });
+    setMenuOpen(false);
+  }, [currentPage]);
+
+  useEffect(() => {
     let previous = window.scrollY;
     const onScroll = () => { const current = window.scrollY; setHeaderHidden(current > previous + 8 && current > 140 && !menuOpen); previous = current; };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [menuOpen]);
 
+  const setLanguage = (next: Language) => { setLanguageState(next); window.localStorage.setItem("ahpixel-language", next); };
   const switchTheme = () => { const next = theme === "light" ? "dark" : "light"; setTheme(next); window.localStorage.setItem("ahpixel-theme", next); };
 
   return <main className="commercial-site" data-theme={theme}>
     <header className={`commercial-nav${headerHidden ? " is-hidden" : ""}${menuOpen ? " is-open" : ""}`}>
-      <a className="commercial-brand" href="#top" aria-label="AHPixel Studio"><img src="/ahpixel-logo.png" alt="" /><span><b>AHPixel</b><small>STUDIO</small></span></a>
-      <nav aria-label={language === "es" ? "Navegación principal" : "Primary navigation"}>{t.nav.map((item, i) => <a key={item} href={["#services", "#projects", "#solutions", "#about"][i]} onClick={() => setMenuOpen(false)}>{item}</a>)}</nav>
-      <div className="commercial-actions"><div className="commercial-language"><button className={language === "es" ? "active" : ""} onClick={() => setLanguage("es")}>ES</button><span>/</span><button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button></div><button className="theme-toggle" onClick={switchTheme} aria-label={theme === "light" ? "Activar modo oscuro" : "Activate light mode"}><span /></button><a className="nav-cta" href="#contact">{t.quote}<b>↗</b></a><button className="commercial-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Menú"><i /><i /></button></div>
+      <a className="commercial-brand" href="/" aria-label="AHPixel Studio"><img src="/ahpixel-logo.png" alt="" /><span><b>AHPixel</b><small>STUDIO</small></span></a>
+      <nav aria-label={language === "es" ? "Navegación principal" : "Primary navigation"}>{t.nav.map((item, index) => <a className={currentPage === pagePaths[index] ? "active" : ""} key={item} href={pagePaths[index]} onClick={() => setMenuOpen(false)}>{item}</a>)}</nav>
+      <div className="commercial-actions"><div className="commercial-language"><button className={language === "es" ? "active" : ""} onClick={() => setLanguage("es")}>ES</button><span>/</span><button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button></div><button className="theme-toggle" onClick={switchTheme} aria-label={theme === "light" ? "Activar modo oscuro" : "Activate light mode"}><span /></button><a className="nav-cta" href="/contact">{t.quote}<b>↗</b></a><button className="commercial-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Menú"><i /><i /></button></div>
     </header>
-    <section className="commercial-hero" id="top"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><div className="hero-copy"><p className="section-kicker">{t.eyebrow}</p><h1>{t.heroA} <em>{t.heroEm}</em> {t.heroB}</h1><p className="hero-lead">{t.lead}</p><div className="hero-actions"><a className="button-primary" href="#contact">{t.primary}<span>↗</span></a><a className="button-secondary" href="#projects">{t.secondary}<span>↓</span></a></div></div><div className="hero-product" aria-label={t.visual}><div className="product-glow" /><figure className="product-desktop"><span className="browser-bar"><i /><i /><i /><b>VANTA / DESKTOP</b></span><img src="/vanta/desktop-hero-clean.png" alt="Vanta Barber Club en escritorio" /></figure><figure className="product-mobile"><img src="/vanta/mobile-services-clean.png" alt="Servicios de Vanta Barber Club en móvil" /></figure><span className="product-caption"><i /> {t.visual}</span></div></section>
-    <section className="trust-rail">{t.trust.map((item, i) => <span key={item}><b>0{i + 1}</b>{item}</span>)}</section>
-    <section className="commercial-section services-section" id="services"><SectionHeading eyebrow={t.servicesEyebrow} title={t.servicesTitle} lead={t.servicesLead} /><div className="service-grid">{t.services.map((s, i) => <article className="service-card" key={s[0]}><div className="service-index">0{i + 1}</div><h3>{s[0]}</h3><p>{s[1]}</p><strong>{s[2]}</strong><a href="#contact">{t.learn}<span>↗</span></a></article>)}</div></section>
-    <section className="commercial-section projects-section" id="projects"><SectionHeading eyebrow={t.projectsEyebrow} title={t.projectsTitle} lead={t.projectsLead} /><div className="project-stack"><ProjectCard data={t.vanta} image="/vanta/desktop-hero-clean.png" number="01" cta={t.viewCase} href="/demos/vanta" /><ProjectCard data={t.lumen} image="/lumen/desktop-hero.webp" number="02" cta={t.viewCase} href="/demos/lumen" reverse /></div></section>
-    <section className="commercial-section needs-section"><SectionHeading eyebrow={t.needsEyebrow} title={t.needsTitle} lead={t.needsLead} /><div className="needs-grid">{t.needs.map((item, i) => <article className="need-card" key={item[0]}><img src={serviceImages[i]} alt={`${item[0]} — ejemplo visual`} loading="lazy" /><div><span>0{i + 1}</span><h3>{item[0]}</h3><p>{item[1]}</p><small>{item[2]}</small></div></article>)}</div></section>
-    <section className="commercial-section ecosystem-section" id="solutions"><SectionHeading eyebrow={t.ecosystemEyebrow} title={t.ecosystemTitle} lead={t.ecosystemLead} /><div className="ecosystem-grid"><EcosystemCard name="VANTA" type="BARBER CLUB" image="/vanta/desktop-hero-clean.png" description={t.vanta[2]} cta={t.solutionCta} href="/demos/vanta" /><EcosystemCard name="LUMEN" type="DENTAL STUDIO" image="/lumen/desktop-hero.webp" description={t.lumen[2]} cta={t.solutionCta} href="/demos/lumen" /></div></section>
-    <section className="commercial-section why-section" id="about"><SectionHeading eyebrow={t.whyEyebrow} title={t.whyTitle} lead={t.whyLead} /><div className="why-grid">{t.why.map((item, i) => <article key={item[0]}><span>0{i + 1}</span><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div></section>
-    <section className="commercial-section process-section"><SectionHeading eyebrow={t.processEyebrow} title={t.processTitle} /><ProcessOrbital steps={t.process} descriptions={t.processText} language={language} /><ol className="process-list">{t.process.map((item, i) => <li key={item}><span>0{i + 1}</span><div><h3>{item}</h3><p>{t.processText[i]}</p></div></li>)}</ol></section>
-    <section className="commercial-section results-section"><SectionHeading eyebrow={t.resultsEyebrow} title={t.resultsTitle} /><div className="results-grid">{t.results.map((item, i) => <article key={item[0]}><span>0{i + 1}</span><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div></section>
-    <section className="tech-section"><div><p className="section-kicker">{t.techEyebrow}</p><h2>{t.techTitle}</h2></div><div className="tech-list"><span>React</span><span>TypeScript</span><span>Vite</span><span>Cloudflare</span><span>SEO</span><span>Analytics</span></div></section>
-    <section className="commercial-section faq-section"><SectionHeading eyebrow={t.faqEyebrow} title={t.faqTitle} /><div className="faq-list">{t.faqs.map((item, i) => <details key={item[0]}><summary><span>0{i + 1}</span>{item[0]}<b>+</b></summary><p>{item[1]}</p></details>)}</div></section>
-    <section className="final-cta"><div className="final-orbit" aria-hidden="true"><i /><i /><i /></div><p className="section-kicker">{t.finalEyebrow}</p><h2>{t.finalTitle}</h2><p>{t.finalLead}</p><a className="button-primary" href="#contact">{t.finalButton}<span>↗</span></a></section>
-    <StudioContact language={language} />
+    <div className="commercial-page" key={currentPage}>
+      {currentPage === "/" && <HomePage t={t} />}
+      {currentPage === "/services" && <ServicesPage t={t} />}
+      {currentPage === "/projects" && <ProjectsPage t={t} />}
+      {currentPage === "/solutions" && <SolutionsPage t={t} />}
+      {currentPage === "/process" && <ProcessPage t={t} language={language} />}
+      {currentPage === "/about" && <AboutPage t={t} />}
+      {currentPage === "/contact" && <StudioContact language={language} />}
+      {currentPage !== "/contact" && <PageCta t={t} />}
+    </div>
   </main>;
 }
 
+type PageContent = typeof content.es;
+
+function HomePage({ t }: { t: PageContent }) { return <>
+  <section className="commercial-hero" id="top"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><div className="hero-copy"><p className="section-kicker">{t.eyebrow}</p><h1>{t.heroA} <em>{t.heroEm}</em> {t.heroB}</h1><p className="hero-lead">{t.lead}</p><div className="hero-actions"><a className="button-primary" href="/contact">{t.primary}<span>↗</span></a><a className="button-secondary" href="/projects">{t.secondary}<span>↗</span></a></div></div><div className="hero-product" aria-label={t.visual}><div className="product-glow" /><figure className="product-desktop"><span className="browser-bar"><i /><i /><i /><b>VANTA / DESKTOP</b></span><img src="/vanta/desktop-hero-clean.png" alt="Vanta Barber Club en escritorio" /></figure><figure className="product-mobile"><img src="/vanta/mobile-services-clean.png" alt="Servicios de Vanta Barber Club en móvil" /></figure><span className="product-caption"><i /> {t.visual}</span></div></section>
+  <section className="trust-rail">{t.trust.map((item) => <span key={item}>{item}</span>)}</section>
+  <section className="commercial-section services-section"><SectionHeading eyebrow={t.servicesEyebrow} title={t.servicesTitle} lead={t.servicesLead} /><div className="service-grid">{t.services.map((service) => <ServiceCard key={service[0]} service={service} cta={t.learn} />)}</div><SectionLink href="/services" label={t.nav[0]} /></section>
+  <section className="commercial-section projects-section"><SectionHeading eyebrow={t.projectsEyebrow} title={t.projectsTitle} lead={t.projectsLead} /><div className="project-stack"><ProjectCard data={t.vanta} image="/vanta/desktop-hero-clean.png" cta={t.viewCase} href="/demos/vanta" /><ProjectCard data={t.lumen} image="/lumen/desktop-hero.webp" cta={t.viewCase} href="/demos/lumen" reverse /></div><SectionLink href="/projects" label={t.nav[1]} /></section>
+</>; }
+
+function ServicesPage({ t }: { t: PageContent }) { return <>
+  <PageIntro eyebrow={t.servicesEyebrow} title={t.servicesTitle} lead={t.servicesLead} cta={t.quote} />
+  <section className="commercial-section services-section"><div className="service-grid">{t.services.map((service) => <ServiceCard key={service[0]} service={service} cta={t.learn} />)}</div></section>
+  <section className="commercial-section needs-section"><SectionHeading eyebrow={t.needsEyebrow} title={t.needsTitle} lead={t.needsLead} /><NeedsGrid t={t} /></section>
+</>; }
+
+function ProjectsPage({ t }: { t: PageContent }) { return <>
+  <PageIntro eyebrow={t.projectsEyebrow} title={t.projectsTitle} lead={t.projectsLead} cta={t.quote} />
+  <section className="commercial-section projects-section"><div className="project-stack"><ProjectCard data={t.vanta} image="/vanta/desktop-hero-clean.png" cta={t.viewCase} href="/demos/vanta" /><ProjectCard data={t.lumen} image="/lumen/desktop-hero.webp" cta={t.viewCase} href="/demos/lumen" reverse /></div></section>
+  <section className="commercial-section ecosystem-section"><SectionHeading eyebrow={t.ecosystemEyebrow} title={t.ecosystemTitle} lead={t.ecosystemLead} /><div className="ecosystem-grid"><EcosystemCard name="VANTA" type="BARBER CLUB" image="/vanta/desktop-hero-clean.png" description={t.vanta[2]} cta={t.solutionCta} href="/demos/vanta" /><EcosystemCard name="LUMEN" type="DENTAL STUDIO" image="/lumen/desktop-hero.webp" description={t.lumen[2]} cta={t.solutionCta} href="/demos/lumen" /></div></section>
+</>; }
+
+function SolutionsPage({ t }: { t: PageContent }) { return <>
+  <PageIntro eyebrow={t.needsEyebrow} title={t.needsTitle} lead={t.needsLead} cta={t.quote} />
+  <section className="commercial-section needs-section"><NeedsGrid t={t} /></section>
+  <section className="commercial-section results-section"><SectionHeading eyebrow={t.resultsEyebrow} title={t.resultsTitle} /><div className="results-grid">{t.results.map((item) => <article key={item[0]}><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div></section>
+  <TechSection t={t} />
+</>; }
+
+function ProcessPage({ t, language }: { t: PageContent; language: Language }) { return <>
+  <PageIntro eyebrow={t.processEyebrow} title={t.processTitle} cta={t.quote} />
+  <section className="commercial-section process-section"><ProcessOrbital steps={t.process} descriptions={t.processText} language={language} /><ol className="process-list">{t.process.map((item, index) => <li key={item}><div><h3>{item}</h3><p>{t.processText[index]}</p></div></li>)}</ol></section>
+</>; }
+
+function AboutPage({ t }: { t: PageContent }) { return <>
+  <PageIntro eyebrow={t.whyEyebrow} title={t.whyTitle} lead={t.whyLead} cta={t.quote} />
+  <section className="commercial-section why-section"><div className="why-grid">{t.why.map((item) => <article key={item[0]}><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div></section>
+  <TechSection t={t} />
+  <section className="commercial-section faq-section"><SectionHeading eyebrow={t.faqEyebrow} title={t.faqTitle} /><div className="faq-list">{t.faqs.map((item) => <details key={item[0]}><summary>{item[0]}<b>+</b></summary><p>{item[1]}</p></details>)}</div></section>
+</>; }
+
+function PageIntro({ eyebrow, title, lead, cta }: { eyebrow: string; title: string; lead?: string; cta: string }) { return <section className="page-intro"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><p className="section-kicker">{eyebrow}</p><h1>{title}</h1>{lead && <p>{lead}</p>}<a className="button-primary" href="/contact">{cta}<span>↗</span></a></section>; }
+function PageCta({ t }: { t: PageContent }) { return <section className="final-cta"><div className="final-orbit" aria-hidden="true"><i /><i /><i /></div><p className="section-kicker">{t.finalEyebrow}</p><h2>{t.finalTitle}</h2><p>{t.finalLead}</p><a className="button-primary" href="/contact">{t.finalButton}<span>↗</span></a></section>; }
 function SectionHeading({ eyebrow, title, lead }: { eyebrow: string; title: string; lead?: string }) { return <header className="commercial-heading"><p className="section-kicker">{eyebrow}</p><h2>{title}</h2>{lead && <p>{lead}</p>}</header>; }
-function ProjectCard({ data, image, number, cta, href, reverse = false }: { data: string[]; image: string; number: string; cta: string; href: string; reverse?: boolean }) { return <article className={`project-card${reverse ? " reverse" : ""}`}><div className="project-visual"><span>{number} / FEATURED</span><img src={image} alt={data[0]} loading="lazy" /></div><div className="project-copy"><span>{data[1]}</span><h3>{data[0]}</h3><p>{data[2]}</p><small>{data[3]}</small><a href={href}>{cta}<b>↗</b></a></div></article>; }
+function SectionLink({ href, label }: { href: string; label: string }) { return <a className="section-link" href={href}>{label}<span>↗</span></a>; }
+function ServiceCard({ service, cta }: { service: string[]; cta: string }) { return <article className="service-card"><h3>{service[0]}</h3><p>{service[1]}</p><strong>{service[2]}</strong><a href="/contact">{cta}<span>↗</span></a></article>; }
+function NeedsGrid({ t }: { t: PageContent }) { return <div className="needs-grid">{t.needs.map((item, index) => <article className="need-card" key={item[0]}><img src={serviceImages[index]} alt={`${item[0]} — ejemplo visual`} loading="lazy" /><div><h3>{item[0]}</h3><p>{item[1]}</p><small>{item[2]}</small><a href="/contact">{t.finalButton}<b>↗</b></a></div></article>)}</div>; }
+function TechSection({ t }: { t: PageContent }) { return <section className="tech-section"><div><p className="section-kicker">{t.techEyebrow}</p><h2>{t.techTitle}</h2></div><div className="tech-list"><span>React</span><span>TypeScript</span><span>Vite</span><span>Cloudflare</span><span>SEO</span><span>Analytics</span></div></section>; }
+function ProjectCard({ data, image, cta, href, reverse = false }: { data: string[]; image: string; cta: string; href: string; reverse?: boolean }) { return <article className={`project-card${reverse ? " reverse" : ""}`}><div className="project-visual"><img src={image} alt={data[0]} loading="lazy" /></div><div className="project-copy"><span>{data[1]}</span><h3>{data[0]}</h3><p>{data[2]}</p><small>{data[3]}</small><a href={href}>{cta}<b>↗</b></a></div></article>; }
 function EcosystemCard({ name, type, image, description, cta, href }: { name: string; type: string; image: string; description: string; cta: string; href: string }) { return <article className="ecosystem-card"><img src={image} alt="" loading="lazy" /><div><span>{type}</span><h3>{name}</h3><p>{description}</p><a href={href}>{cta}<b>↗</b></a></div></article>; }
 
 function ProcessOrbital({ steps, descriptions, language }: { steps: string[]; descriptions: string[]; language: Language }) {
@@ -150,8 +200,8 @@ function ProcessOrbital({ steps, descriptions, language }: { steps: string[]; de
   return <div className="process-orbital" aria-live="polite">
     <div className="process-canvas-wrap" aria-hidden="true"><BuildSystemCanvas ref={canvasRef} /><span className="process-vignette" /></div>
     <div className="orbital-legend" aria-hidden="true">{legend.map(([title, copy], index) => <span key={title}><b>{title}</b>{copy}<i className={`legend-signal signal-${index + 1}`} /></span>)}</div>
-    <div className="orbital-copy" key={`${language}-${active}`}><span>{String(active + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span><small>{activeLabel}</small><h3>{steps[active]}</h3><p>{descriptions[active]}</p></div>
+    <div className="orbital-copy" key={`${language}-${active}`}><small>{activeLabel}</small><h3>{steps[active]}</h3><p>{descriptions[active]}</p></div>
     <div className="process-rails" aria-hidden="true">{rails.map((rail, index) => <span className={Math.min(2, Math.floor(active / 2.34)) === index ? "active" : ""} key={rail}>{rail}<i /></span>)}</div>
-    <div className="orbital-stages" role="tablist" aria-label={language === "es" ? "Etapas del proceso" : "Process stages"}>{steps.map((step, index) => <button key={step} className={active === index ? "active" : ""} onClick={() => selectStep(index)} role="tab" aria-selected={active === index}><b>{String(index + 1).padStart(2, "0")}</b><span>{step}</span></button>)}</div>
+    <div className="orbital-stages" role="tablist" aria-label={language === "es" ? "Etapas del proceso" : "Process stages"}>{steps.map((step, index) => <button key={step} className={active === index ? "active" : ""} onClick={() => selectStep(index)} role="tab" aria-selected={active === index}><span>{step}</span></button>)}</div>
   </div>;
 }
