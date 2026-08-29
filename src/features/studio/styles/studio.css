@@ -42,6 +42,39 @@
 @media(max-width:480px){.commercial-site .commercial-nav{grid-template-columns:minmax(0,1fr) auto;min-height:76px;padding:0 12px}.commercial-site .commercial-brand{gap:9px;min-width:0}.commercial-site .commercial-brand img{width:38px;height:38px}.commercial-site .commercial-brand b{font-size:16px}.commercial-site .commercial-brand small{font-size:7px}.commercial-site .commercial-actions{gap:4px}.commercial-site .commercial-language{gap:1px}.commercial-site .commercial-language button{padding:8px 3px;font-size:9px}.commercial-site .theme-toggle{width:36px;height:36px}.commercial-site .commercial-menu{width:42px;height:42px}.commercial-site .commercial-hero{padding-right:18px;overflow:hidden}.commercial-site .commercial-hero h1{max-width:100%;font-size:clamp(43px,12vw,55px);letter-spacing:-.055em;overflow-wrap:break-word}.commercial-site .hero-lead{font-size:16px}.commercial-site .hero-product{min-height:330px}.commercial-site .product-mobile{width:24%}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 
+/* Keep responsive project mockups fully visible inside their frames. */
+.commercial-site .product-desktop img {
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+.commercial-site .product-mobile img {
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+.commercial-site .project-visual img {
+  object-fit: contain;
+  background: var(--panel);
+}
+
+/* Let project frames size themselves from the source artwork.  The previous
+   fixed min-height plus a forced image height created a large empty band
+   below wide Vanta screenshots. */
+.commercial-site .project-visual {
+  min-height: 0;
+  height: fit-content;
+  align-self: start;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.commercial-site .project-visual img {
+  height: auto;
+  max-height: none;
+  align-self: flex-start;
+}
+
 /* Cinematic process system — reuses the original eleven-scene canvas engine. */
 .process-section .process-orbital{
   position:relative;
@@ -310,6 +343,10 @@
 
 @media(max-width:1100px){.commercial-site .contact-grid{grid-template-columns:1fr}}
 @media(max-width:720px){
+  .commercial-site .project-visual {
+    min-height: 0;
+    height: fit-content;
+  }
   .commercial-site .project-form{padding:24px 18px}
   .commercial-site .project-form input,.commercial-site .project-form textarea,.commercial-site .project-form .service-native{font-size:16px!important}
   .commercial-site .form-topline b{min-width:68px}

@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useRef, useState } from "react";
+import { createWhatsAppUrl, studioContact } from "@/config/contact";
 
 type Language = "en" | "es";
 
-const EMAIL = "ahpixel.studio@gmail.com";
-const PHONE = "51997150226";
+const EMAIL = studioContact.email;
+const PHONE = studioContact.phone;
 const INSTAGRAM = "https://instagram.com/ahpixel.studio";
 const GITHUB = "https://github.com/ah-pixel-studio2005";
 const TIKTOK = "https://www.tiktok.com/@ahpixel.studio";
@@ -102,10 +103,7 @@ export default function StudioContact({ language }: { language: Language }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [service, setService] = useState("");
-  const whatsappMessage = language === "es"
-    ? "Hola AHPixel Studio, me gustaría consultar sobre una página web."
-    : "Hello AHPixel Studio, I would like to ask about a website project.";
-  const whatsappUrl = `https://wa.me/${PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappUrl = createWhatsAppUrl(studioContact.whatsappMessage[language], PHONE);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -162,7 +160,7 @@ export default function StudioContact({ language }: { language: Language }) {
             <div className="contact-channels">
               <span>{t.channels}</span>
               <a href={gmailComposeUrl(language === "es" ? "Consulta para AHPixel Studio" : "Inquiry for AHPixel Studio")} target="_blank" rel="noopener noreferrer"><ChannelIcon type="email" /><small>{t.email}</small><strong>{EMAIL}</strong><Arrow /></a>
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><ChannelIcon type="whatsapp" /><small>{t.whatsapp}</small><strong>+51 997 150 226</strong><Arrow /></a>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><ChannelIcon type="whatsapp" /><small>{t.whatsapp}</small><strong>{studioContact.phoneDisplay}</strong><Arrow /></a>
               <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer"><ChannelIcon type="instagram" /><small>{t.instagram}</small><strong>@ahpixel.studio</strong><Arrow /></a>
               <a href={GITHUB} target="_blank" rel="noopener noreferrer"><ChannelIcon type="github" /><small>{t.github}</small><strong>ah-pixel-studio2005</strong><Arrow /></a>
             </div>
@@ -205,9 +203,6 @@ export default function StudioContact({ language }: { language: Language }) {
         <span>{t.rights}</span>
       </footer>
 
-      <a className="fixed-whatsapp" href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label={`${t.whatsapp}: +51 997 150 226`}>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.7 9.7 0 0 0-8.4 14.6L2.2 22l5.6-1.4A9.8 9.8 0 1 0 12 2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3.3.9.9-3.2-.2-.3A8 8 0 1 1 12 19.7Zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-1.9-1.2 7 7 0 0 1-1.3-1.6c-.1-.2 0-.4.1-.5l.4-.5.2-.4c.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.4-.6 1.6-1.1.2-.6.2-1 .2-1.1-.1-.1-.3-.2-.6-.3Z" /></svg>
-      </a>
     </>
   );
 }

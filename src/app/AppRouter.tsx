@@ -3,6 +3,7 @@ import "@/features/studio/styles/studio.css";
 import StudioSite from "@/features/studio/pages/StudioSite";
 import VantaRoute from "@/features/demos/vanta/VantaRoute";
 import LumenRoute from "@/features/demos/lumen/LumenRoute";
+import FloatingWhatsApp from "@/components/shared/FloatingWhatsApp";
 
 function currentPath() {
   return window.location.pathname.replace(/\/+$/, "") || "/";
@@ -23,5 +24,10 @@ export function AppRouter() {
       ? <LumenRoute path={path} />
       : <StudioSite path={path} />;
 
-  return content;
+  return (
+    <>
+      {content}
+      <FloatingWhatsApp />
+    </>
+  );
 }

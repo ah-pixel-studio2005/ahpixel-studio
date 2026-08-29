@@ -1,5 +1,5 @@
 const productionUrl = "https://ahpixel-studio.vercel.app";
-const whatsappNumber = "51997150226";
+const whatsappNumber = "51930978999";
 const instagramUrl = "https://instagram.com/ahpixel.studio";
 const directWhatsappMessage = "Hola AHPixel Studio, me gustaría consultar sobre una página web.";
 
@@ -7,7 +7,7 @@ export const siteConfig = {
   name: "AHPixel Studio",
   siteUrl: productionUrl,
   email: "ahpixel.studio@gmail.com",
-  phoneDisplay: "+51 997 150 226",
+  phoneDisplay: "+51 930 978 999",
   whatsappNumber,
   whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(directWhatsappMessage)}`,
   instagramLabel: "@ahpixel.studio",
