@@ -1,140 +1,64 @@
-.global-whatsapp {
-  position: fixed;
-  right: clamp(18px, 2vw, 30px);
-  bottom: max(24px, calc(env(safe-area-inset-bottom) + 18px));
-  z-index: 10000;
-  display: grid;
-  width: 68px;
-  height: 78px;
-  place-items: center end;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  text-decoration: none;
-}
+import { useEffect, useState } from "react";
+import "./floating-whatsapp.css";
+import { createWhatsAppUrl, studioContact } from "@/config/contact";
 
-.global-whatsapp__copy {
-  position: absolute;
-  right: 34px;
-  display: grid;
-  width: 260px;
-  gap: 4px;
-  padding: 16px 45px 16px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
-  background: linear-gradient(135deg, #090a0c 0%, #1a1d23 100%);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(68px);
-  transition: opacity 440ms ease, transform 580ms cubic-bezier(.18,.8,.22,1);
-}
+type FloatingWhatsAppProps = {
+  phone?: string;
+  message?: string;
+  label?: string;
+  title?: string;
+  subtitle?: string;
+};
 
-.global-whatsapp.is-expanded .global-whatsapp__copy {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
+export default function FloatingWhatsApp({
+  phone = studioContact.phone,
+  message = studioContact.whatsappMessage.es,
+  label = "Contactar a AHPixel Studio por WhatsApp",
+  title = "Solicitar asesoría",
+  subtitle = "¡Escríbenos ahora!",
+}: FloatingWhatsAppProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
 
-.global-whatsapp__copy strong {
-  color: #f5f1e7;
-  font-size: 20px;
-  font-weight: 650;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
+  useEffect(() => {
+    let showTimer: number | undefined;
+    let hideTimer: number | undefined;
 
-.global-whatsapp__copy small {
-  color: #a9adb4;
-  font-size: 16px;
-  line-height: 1.25;
-}
+    // Start compact, wait 4s, then repeat a calm rhythm: 6s expanded,
+    // followed by 4s compact before showing again.
+    const showMessage = () => {
+      setIsExpanded(true);
+      hideTimer = window.setTimeout(() => {
+        setIsExpanded(false);
+        showTimer = window.setTimeout(showMessage, 4000);
+      }, 6000);
+    };
 
-.global-whatsapp__icon {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  width: 66px;
-  height: 66px;
-  place-items: center;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-  box-shadow: 
-    0 12px 28px rgba(7, 100, 48, 0.43),
-    0 4px 12px rgba(0, 0, 0, 0.25),
-    inset 0 2px 4px rgba(255, 255, 255, 0.3);
-  isolation: isolate;
-  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
-}
+    showTimer = window.setTimeout(showMessage, 4000);
 
-.global-whatsapp__icon::after {
-  position: absolute;
-  z-index: -1;
-  content: "";
-  border-radius: inherit;
-  pointer-events: none;
-}
+    return () => {
+      if (showTimer !== undefined) window.clearTimeout(showTimer);
+      if (hideTimer !== undefined) window.clearTimeout(hideTimer);
+    };
+  }, []);
 
-.global-whatsapp__icon::after {
-  inset: -3px;
-  border: 3px solid rgba(32, 201, 104, 0.72);
-  animation: whatsapp-wave 2.8s ease-out infinite;
-}
-
-.global-whatsapp svg {
-  width: 31px;
-  height: 31px;
-  fill: currentColor;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
-}
-
-.global-whatsapp:hover .global-whatsapp__icon,
-.global-whatsapp:focus-visible .global-whatsapp__icon {
-  background: linear-gradient(135deg, #2fe36e 0%, #159b8c 100%);
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 
-    0 16px 36px rgba(7, 100, 48, 0.55),
-    0 6px 16px rgba(0, 0, 0, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.4);
-}
-
-.global-whatsapp:focus-visible { outline: none; }
-
-@keyframes whatsapp-wave {
-  0% { opacity: 0; transform: scale(1); }
-  8% { opacity: .8; }
-  48% { opacity: 0; transform: scale(1.62); }
-  100% { opacity: 0; transform: scale(1.62); }
-}
-
-@media (max-width: 720px) {
-  .global-whatsapp {
-    right: 14px;
-    bottom: max(30px, calc(env(safe-area-inset-bottom) + 22px));
-    width: 60px;
-    height: 68px;
-  }
-
-  .global-whatsapp__copy {
-    right: 30px;
-    width: 232px;
-    padding: 14px 39px 14px 18px;
-    border-radius: 16px;
-  }
-
-  .global-whatsapp__copy strong { font-size: 17px; }
-  .global-whatsapp__copy small { font-size: 14px; }
-
-  .global-whatsapp__icon {
-    width: 58px;
-    height: 58px;
-    box-shadow: 0 10px 25px rgba(7, 100, 48, 0.43);
-  }
-
-  .global-whatsapp svg { width: 28px; height: 28px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .global-whatsapp__copy { transition: none; }
-  .global-whatsapp__icon::after { animation: none; }
+  return (
+    <a
+      className={`global-whatsapp${isExpanded ? " is-expanded" : ""}`}
+      href={createWhatsAppUrl(message, phone)}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      title="Escríbenos por WhatsApp"
+    >
+      <span className="global-whatsapp__copy">
+        <strong>{title}</strong>
+        <small>{subtitle}</small>
+      </span>
+      <span className="global-whatsapp__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2a9.7 9.7 0 0 0-8.4 14.6L2.2 22l5.6-1.4A9.8 9.8 0 1 0 12 2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3.3.9.9-3.2-.2-.3A8 8 0 1 1 12 19.7Zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-1.9-1.2 7 7 0 0 1-1.3-1.6c-.1-.2 0-.4.1-.5l.4-.5.2-.4c.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.4-.6 1.6-1.1.2-.6.2-1 .2-1.1-.1-.1-.3-.2-.6-.3Z" />
+        </svg>
+      </span>
+    </a>
+  );
 }
