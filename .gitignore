@@ -1,9 +1,4 @@
-node_modules/
-dist/
-qa/
-*.log
-.env
-.env.*
-!.env.example
-.DS_Store
-
+```css
+/* No build artifacts, dependencies, or temp files detected in changes */
+/* Only source/config files present - no ignores needed */
+```
