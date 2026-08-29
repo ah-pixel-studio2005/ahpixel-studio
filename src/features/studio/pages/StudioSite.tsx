@@ -57,7 +57,7 @@ const content = {
   },
 };
 
-const serviceImages = ["/solutions/landing-page.jpg", "/solutions/business-website.jpg", "/solutions/professional-website.jpg", "/solutions/website-redesign.jpg"];
+const serviceImages = ["/solutions/landing-page-es.png", "/solutions/business-website-es.png", "/solutions/professional-website-es.png", "/solutions/website-redesign-es.png"];
 
 const pagePaths = ["/services", "/projects", "/solutions", "/process", "/about", "/contact"];
 
@@ -106,9 +106,9 @@ export default function StudioSite({ path = "/" }: { path?: string }) {
 type PageContent = typeof content.es;
 
 function HomePage({ t }: { t: PageContent }) { return <>
-  <section className="commercial-hero" id="top"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><div className="hero-copy"><p className="section-kicker">{t.eyebrow}</p><h1>{t.heroA} <em>{t.heroEm}</em> {t.heroB}</h1><p className="hero-lead">{t.lead}</p><div className="hero-actions"><a className="button-primary" href="/contact">{t.primary}<span>↗</span></a><a className="button-secondary" href="/projects">{t.secondary}<span>↗</span></a></div></div><div className="hero-product" aria-label={t.visual}><div className="product-glow" /><figure className="product-desktop"><span className="browser-bar"><i /><i /><i /><b>VANTA / DESKTOP</b></span><img src="/vanta/desktop-hero-clean.png" alt="Vanta Barber Club en escritorio" /></figure><figure className="product-mobile"><img src="/vanta/mobile-services-clean.png" alt="Servicios de Vanta Barber Club en móvil" /></figure><span className="product-caption"><i /> {t.visual}</span></div></section>
+  <section className="commercial-hero" id="top"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><div className="hero-copy"><p className="section-kicker">{t.eyebrow}</p><h1>{t.heroA} <em>{t.heroEm}</em> {t.heroB}</h1><p className="hero-lead">{t.lead}</p><div className="hero-actions"><a className="button-primary" href="/contact">{t.primary}<span>↗</span></a><a className="button-secondary" href="/projects">{t.secondary}<span>↗</span></a></div></div><div className="hero-product" aria-label={t.visual}><div className="product-glow" /><figure className="product-desktop"><span className="browser-bar"><i /><i /><i /><b>VANTA / DESKTOP</b></span><img src="/vanta/desktop-hero-clean.png" alt="Vanta Barber Club en escritorio" /></figure><figure className="product-mobile"><img src="/vanta/mobile-hero-clean.png" alt="Inicio de Vanta Barber Club en móvil" /></figure><span className="product-caption"><i /> {t.visual}</span></div></section>
   <section className="trust-rail">{t.trust.map((item) => <span key={item}>{item}</span>)}</section>
-  <section className="commercial-section services-section"><SectionHeading eyebrow={t.servicesEyebrow} title={t.servicesTitle} lead={t.servicesLead} /><div className="service-grid">{t.services.map((service) => <ServiceCard key={service[0]} service={service} cta={t.learn} />)}</div><SectionLink href="/services" label={t.nav[0]} /></section>
+  <section className="commercial-section services-section"><SectionHeading eyebrow={t.servicesEyebrow} title={t.servicesTitle} lead={t.servicesLead} /><div className="service-grid">{t.services.map((service) => <ServiceCard key={service[0]} service={service} cta={t.learn} />)}</div></section>
   <section className="commercial-section projects-section"><SectionHeading eyebrow={t.projectsEyebrow} title={t.projectsTitle} lead={t.projectsLead} /><div className="project-stack"><ProjectCard data={t.vanta} image="/vanta/desktop-hero-clean.png" cta={t.viewCase} href="/demos/vanta" /><ProjectCard data={t.lumen} image="/demos/lumen/lumen-clinic-hero.webp" cta={t.viewCase} href="/demos/lumen" reverse /></div><SectionLink href="/projects" label={t.nav[1]} /></section>
 </>; }
 
