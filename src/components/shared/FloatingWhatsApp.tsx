@@ -12,12 +12,19 @@ type FloatingWhatsAppProps = {
 
 export default function FloatingWhatsApp({
   phone = studioContact.phone,
-  message = studioContact.whatsappMessage.es,
-  label = "Contactar a AHPixel Studio por WhatsApp",
-  title = "Solicitar asesoría",
-  subtitle = "¡Escríbenos ahora!",
+  message,
+  label,
+  title,
+  subtitle,
 }: FloatingWhatsAppProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [language, setLanguage] = useState<"es" | "en">(() => window.localStorage.getItem("ahpixel-language") === "en" ? "en" : "es");
+
+  useEffect(() => {
+    const syncLanguage = (event: Event) => setLanguage((event as CustomEvent<"es" | "en">).detail || "es");
+    window.addEventListener("ahpixel-language-change", syncLanguage);
+    return () => window.removeEventListener("ahpixel-language-change", syncLanguage);
+  }, []);
 
   useEffect(() => {
     let showTimer: number | undefined;
@@ -41,18 +48,22 @@ export default function FloatingWhatsApp({
     };
   }, []);
 
+  const copy = language === "es"
+    ? { message: studioContact.whatsappMessage.es, label: "Contactar a AHPixel Studio por WhatsApp", title: "Solicitar asesoría", subtitle: "¡Escríbenos ahora!", tooltip: "Escríbenos por WhatsApp" }
+    : { message: studioContact.whatsappMessage.en, label: "Contact AHPixel Studio on WhatsApp", title: "Request advice", subtitle: "Message us now!", tooltip: "Message us on WhatsApp" };
+
   return (
     <a
       className={`global-whatsapp${isExpanded ? " is-expanded" : ""}`}
-      href={createWhatsAppUrl(message, phone)}
+      href={createWhatsAppUrl(message || copy.message, phone)}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={label}
-      title="Escríbenos por WhatsApp"
+      aria-label={label || copy.label}
+      title={copy.tooltip}
     >
       <span className="global-whatsapp__copy">
-        <strong>{title}</strong>
-        <small>{subtitle}</small>
+        <strong>{title || copy.title}</strong>
+        <small>{subtitle || copy.subtitle}</small>
       </span>
       <span className="global-whatsapp__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24">

@@ -14,8 +14,19 @@ export function AppRouter() {
 
   useEffect(() => {
     const syncPath = () => setPath(currentPath());
+    const navigate = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = (event.target as Element | null)?.closest("a");
+      if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) return;
+      const url = new URL(anchor.href, window.location.href);
+      if (url.origin !== window.location.origin || url.pathname === window.location.pathname && url.hash) return;
+      event.preventDefault();
+      window.history.pushState({}, "", `${url.pathname}${url.search}${url.hash}`);
+      syncPath();
+    };
     window.addEventListener("popstate", syncPath);
-    return () => window.removeEventListener("popstate", syncPath);
+    document.addEventListener("click", navigate);
+    return () => { window.removeEventListener("popstate", syncPath); document.removeEventListener("click", navigate); };
   }, []);
 
   const content = path.startsWith("/demos/vanta")

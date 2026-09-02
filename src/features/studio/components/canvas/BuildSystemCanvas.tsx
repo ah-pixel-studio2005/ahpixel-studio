@@ -342,6 +342,10 @@ function drawCoreRoute(
   const eased = smooth(local);
   const start = CORE_STATIONS[startIndex];
   const end = CORE_STATIONS[startIndex + 1];
+  if (!start || !end) {
+    context.restore();
+    return;
+  }
   const x = (start.x + (end.x - start.x) * eased) * width;
   const baseY = (start.y + (end.y - start.y) * eased) * height;
   const y = baseY - Math.sin(Math.PI * eased) * height * 0.035;
@@ -727,6 +731,7 @@ const BuildSystemCanvas = forwardRef<BuildSystemCanvasHandle>(function BuildSyst
       SYSTEM_SCENES.forEach((drawScene, index) => {
         if (sceneWeights[index] > 0.001) {
           const station = CORE_STATIONS[index];
+          if (!station) return;
           const offsetX = (station.x - 0.5) * width * 0.88;
           const offsetY = (station.y - 0.4) * height * 0.72;
           const stationScale = 0.9 + (station.depth - 0.88) * 0.72;
