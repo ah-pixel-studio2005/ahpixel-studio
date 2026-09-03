@@ -166,7 +166,26 @@
 .commercial-site .site-footer__bottom{display:flex;justify-content:space-between;gap:34px;align-items:center;max-width:1400px;margin:0 auto;padding-top:18px;border-top:1px solid rgba(162,194,214,.2);color:#6f8798;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
 @keyframes footerOrbit{to{transform:rotate(360deg)}}
 @media(max-width:980px){.commercial-site .site-footer__lead{grid-template-columns:1fr}.commercial-site .site-footer__cta{width:fit-content}.commercial-site .site-footer__directory{grid-template-columns:1.25fr 1fr 1fr}.commercial-site .site-footer__social{grid-column:2}.commercial-site .site-footer__bottom>span:nth-child(2){display:none}}
-@media(max-width:620px){.commercial-site .site-footer{padding:42px 18px 76px}.commercial-site .site-footer__signal{top:3%;right:-22%;width:76vw}.commercial-site .site-footer__lead{gap:24px;padding-bottom:30px}.commercial-site .site-footer__lead h2{font-size:clamp(38px,11vw,52px)}.commercial-site .site-footer__cta{width:100%;min-width:0}.commercial-site .site-footer__directory{grid-template-columns:1fr 1fr;gap:28px 20px;padding:30px 0}.commercial-site .site-footer__directory nav{grid-template-columns:1fr 1fr;gap:9px 16px}.commercial-site .site-footer__identity{grid-column:1/-1}.commercial-site .site-footer__contact{grid-column:1/-1}.commercial-site .site-footer__social{grid-column:auto}.commercial-site .site-footer__bottom{display:grid;grid-template-columns:1fr;gap:10px;line-height:1.5}}
+@media(max-width:620px){
+  /* On phones the CTA already appears above the footer: keep the closing compact. */
+  .commercial-site .site-footer{padding:28px 18px 34px}
+  .commercial-site .site-footer__signal{top:-12%;right:-19%;width:62vw}
+  .commercial-site .site-footer__lead{display:none}
+  .commercial-site .site-footer__wordmark{right:-.08em;bottom:.1em;font-size:42vw}
+  .commercial-site .site-footer__directory{grid-template-columns:1fr 1fr;gap:25px 18px;padding:0}
+  .commercial-site .site-footer__identity{grid-column:1/-1;padding-bottom:18px;border-bottom:1px solid rgba(162,194,214,.2)}
+  .commercial-site .site-footer__brand img{width:46px;height:46px}
+  .commercial-site .site-footer__brand b{font-size:21px}.commercial-site .site-footer__brand small{margin-top:5px;font-size:8px}
+  .commercial-site .site-footer__identity p{margin-top:13px;font-size:12px;line-height:1.5}
+  .commercial-site .site-footer__directory strong{margin-bottom:12px;font-size:8px}
+  .commercial-site .site-footer__directory nav{grid-template-columns:1fr 1fr;gap:8px 14px}
+  .commercial-site .site-footer__directory nav a,.commercial-site .site-footer__contact a,.commercial-site .site-footer__contact span{font-size:12px}
+  .commercial-site .site-footer__contact{grid-column:auto;gap:8px}
+  .commercial-site .site-footer__social{grid-column:1/-1;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding-top:17px;border-top:1px solid rgba(162,194,214,.2)}
+  .commercial-site .site-footer__social strong{margin:0}.commercial-site .site-footer__social-links{gap:8px}.commercial-site .site-footer__social-links a{width:34px;height:34px}
+  /* The global WhatsApp stays fixed; don't place any footer action beneath it. */
+  .commercial-site .site-footer__bottom{display:none}
+}
 @media(prefers-reduced-motion:reduce){.commercial-site .site-footer__signal i{animation:none}}
 
 /* Multipage shell: shorter pages, clear navigation and restrained transitions. */

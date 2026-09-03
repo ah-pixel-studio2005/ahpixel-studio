@@ -18,6 +18,7 @@ export default function FloatingWhatsApp({
   subtitle,
 }: FloatingWhatsAppProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [language, setLanguage] = useState<"es" | "en">(() => window.localStorage.getItem("ahpixel-language") === "en" ? "en" : "es");
 
   useEffect(() => {
@@ -27,8 +28,22 @@ export default function FloatingWhatsApp({
   }, []);
 
   useEffect(() => {
+    const footer = document.querySelector(".site-footer");
+    if (!footer || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(([entry]) => setIsFooterVisible(entry.isIntersecting), { threshold: 0.12 });
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     let showTimer: number | undefined;
     let hideTimer: number | undefined;
+
+    // Keep the footer's own links clear while it is on screen.
+    if (isFooterVisible) {
+      setIsExpanded(false);
+      return;
+    }
 
     // Start compact, wait 4s, then repeat a calm rhythm: 6s expanded,
     // followed by 4s compact before showing again.
@@ -46,7 +61,7 @@ export default function FloatingWhatsApp({
       if (showTimer !== undefined) window.clearTimeout(showTimer);
       if (hideTimer !== undefined) window.clearTimeout(hideTimer);
     };
-  }, []);
+  }, [isFooterVisible]);
 
   const copy = language === "es"
     ? { message: studioContact.whatsappMessage.es, label: "Contactar a AHPixel Studio por WhatsApp", title: "Solicitar asesoría", subtitle: "¡Escríbenos ahora!", tooltip: "Escríbenos por WhatsApp" }
