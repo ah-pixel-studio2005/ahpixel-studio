@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import StudioContact from "@/features/studio/components/contact/StudioContact";
 import BuildSystemCanvas, { type BuildSystemCanvasHandle } from "@/features/studio/components/canvas/BuildSystemCanvas";
+import StudioFooter from "@/features/studio/components/layout/StudioFooter";
 
 type Language = "es" | "en";
 type Theme = "light" | "dark";
@@ -103,7 +104,7 @@ export default function StudioSite({ path = "/" }: { path?: string }) {
   };
   const switchTheme = () => { const next = theme === "light" ? "dark" : "light"; setTheme(next); window.localStorage.setItem("ahpixel-theme", next); };
 
-  return <main className="commercial-site" data-theme={theme}>
+  return <main className="commercial-site" data-theme={theme} id="top">
     <header className={`commercial-nav${headerHidden ? " is-hidden" : ""}${menuOpen ? " is-open" : ""}`}>
       <a className="commercial-brand" href="/" aria-label="AHPixel Studio"><img src="/ahpixel-logo.webp" alt="" width="50" height="50" /><span><b>AHPixel</b><small>STUDIO</small></span></a>
       <nav aria-label={language === "es" ? "Navegación principal" : "Primary navigation"}>{t.nav.map((item, index) => <a className={currentPage === pagePaths[index] ? "active" : ""} key={item} href={pagePaths[index]} onClick={() => setMenuOpen(false)}>{item}</a>)}</nav>
@@ -119,13 +120,14 @@ export default function StudioSite({ path = "/" }: { path?: string }) {
       {currentPage === "/contact" && <StudioContact language={language} />}
       {currentPage !== "/contact" && <PageCta t={t} />}
     </div>
+    <StudioFooter language={language} />
   </main>;
 }
 
 type PageContent = typeof content.es;
 
 function HomePage({ t, language }: { t: PageContent; language: Language }) { return <>
-  <section className="commercial-hero" id="top"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><div className="hero-copy"><p className="section-kicker">{t.eyebrow}</p><h1><span className="hero-line-main">{t.heroA}</span><em>{t.heroEm}</em><span className="hero-line-tail">{t.heroB}</span></h1><p className="hero-lead">{t.lead}</p><div className="hero-actions"><a className="button-primary" href="/contact">{t.primary}<span>↗</span></a><a className="button-secondary" href="/projects">{t.secondary}<span>↗</span></a></div></div><div className="hero-product" aria-label={t.visual}><div className="product-glow" /><figure className="product-desktop"><span className="browser-bar"><i /><i /><i /><b>VANTA / DESKTOP</b></span><picture><source type="image/webp" srcSet="/responsive/designs/vanta-640.webp 640w, /responsive/designs/vanta-857.webp 857w" sizes="(max-width: 720px) 82vw, 55vw" /><img src="/responsive/designs/vanta-857.webp" alt={language === "es" ? "Diseño Vanta para barbería visto en escritorio" : "Vanta barbershop design on desktop"} width="857" height="397" fetchPriority="high" /></picture></figure><figure className="product-mobile"><img src="/responsive/designs/vanta-detail-mobile-375.webp" alt={language === "es" ? "Diseño Vanta adaptado a móvil" : "Vanta design adapted to mobile"} width="380" height="844" /></figure><span className="product-caption"><i /> {t.visual}</span></div></section>
+  <section className="commercial-hero"><div className="hero-ambient" aria-hidden="true"><i /><i /><i /></div><div className="hero-copy"><p className="section-kicker">{t.eyebrow}</p><h1><span className="hero-line-main">{t.heroA}</span><em>{t.heroEm}</em><span className="hero-line-tail">{t.heroB}</span></h1><p className="hero-lead">{t.lead}</p><div className="hero-actions"><a className="button-primary" href="/contact">{t.primary}<span>↗</span></a><a className="button-secondary" href="/projects">{t.secondary}<span>↗</span></a></div></div><div className="hero-product" aria-label={t.visual}><div className="product-glow" /><figure className="product-desktop"><span className="browser-bar"><i /><i /><i /><b>VANTA / DESKTOP</b></span><picture><source type="image/webp" srcSet="/responsive/designs/vanta-640.webp 640w, /responsive/designs/vanta-857.webp 857w" sizes="(max-width: 720px) 82vw, 55vw" /><img src="/responsive/designs/vanta-857.webp" alt={language === "es" ? "Diseño Vanta para barbería visto en escritorio" : "Vanta barbershop design on desktop"} width="857" height="397" fetchPriority="high" /></picture></figure><figure className="product-mobile"><img src="/responsive/designs/vanta-detail-mobile-375.webp" alt={language === "es" ? "Diseño Vanta adaptado a móvil" : "Vanta design adapted to mobile"} width="380" height="844" /></figure><span className="product-caption"><i /> {t.visual}</span></div></section>
   <section className="trust-rail">{t.trust.map((item) => <span key={item}>{item}</span>)}</section>
   <section className="commercial-section services-section"><SectionHeading eyebrow={t.servicesEyebrow} title={t.servicesTitle} lead={t.servicesLead} /><div className="service-grid">{t.services.map((service, index) => <ServiceCard key={service[0]} service={service} index={index} t={t} language={language} />)}</div></section>
   <section className="commercial-section projects-section"><SectionHeading eyebrow={t.projectsEyebrow} title={t.projectsTitle} lead={t.projectsLead} /><div className="project-stack"><ProjectCard data={t.vanta} kind="vanta" variant="home" cta={t.viewCase} href="/demos/vanta" language={language} /><ProjectCard data={t.lumen} kind="lumen" variant="home" cta={t.viewCase} href="/demos/lumen" language={language} reverse /></div><SectionLink href="/projects" label={t.nav[1]} /></section>

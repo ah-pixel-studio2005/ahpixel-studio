@@ -9,7 +9,6 @@ const EMAIL = studioContact.email;
 const PHONE = studioContact.phone;
 const INSTAGRAM = "https://instagram.com/ahpixel.studio";
 const GITHUB = "https://github.com/ah-pixel-studio2005";
-const TIKTOK = "https://www.tiktok.com/@ahpixel.studio";
 
 const gmailComposeUrl = (subject = "", body = "") =>
   `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -44,9 +43,6 @@ const copy = {
     sent: "Consulta enviada correctamente. Te responderemos lo antes posible.",
     error: "No pudimos enviar la consulta. Inténtalo nuevamente o escríbenos por WhatsApp.",
     fixed: "ESCRÍBENOS",
-    footer: "Diseño y desarrollo web con dirección, carácter y propósito.",
-    worldwide: "LIMA, PERÚ · TRABAJAMOS A NIVEL INTERNACIONAL",
-    rights: "© 2026 AHPixel Studio. Todos los derechos reservados.",
   },
   en: {
     eyebrow: "CONTACT / NEW PROJECT",
@@ -77,9 +73,6 @@ const copy = {
     sent: "Your inquiry was sent successfully. We will reply as soon as possible.",
     error: "We could not send your inquiry. Please try again or contact us through WhatsApp.",
     fixed: "MESSAGE US",
-    footer: "Web design and development with direction, character and purpose.",
-    worldwide: "LIMA, PERU · AVAILABLE WORLDWIDE",
-    rights: "© 2026 AHPixel Studio. All rights reserved.",
   },
 };
 
@@ -195,13 +188,6 @@ export default function StudioContact({ language }: { language: Language }) {
           </form>
         </div>
       </section>
-
-      <footer className="studio-footer">
-        <div><strong>AHPixel</strong><span>STUDIO / 2026</span></div>
-        <p>{t.footer}</p>
-        <div className="footer-presence"><p>{t.worldwide}</p><nav aria-label={language === "es" ? "Redes sociales" : "Social media"}><a href={INSTAGRAM} target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href={TIKTOK} target="_blank" rel="noopener noreferrer">TikTok ↗</a><a href={GITHUB} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`mailto:${EMAIL}`}>Email ↗</a></nav></div>
-        <span>{t.rights}</span>
-      </footer>
 
     </>
   );
